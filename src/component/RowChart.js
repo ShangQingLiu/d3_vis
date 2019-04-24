@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
-import dc from 'dc'
 import * as d3 from 'd3'
-import crossfilter from 'crossfilter'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 class RowChart extends Component{
    constructor(props){
@@ -9,9 +8,9 @@ class RowChart extends Component{
    }
    componentDidMount(){
 
-       var margin = {top: 20, right: 120, bottom: 0, left: 10},
-           width = 600 - margin.left - margin.right,
-           height = 250 - margin.top - margin.bottom;
+       var margin = {top: 20, right: 120, bottom: 0, left: 50},
+           width = 800 - margin.left - margin.right,
+           height = 530 - margin.top - margin.bottom;
 
        var x = d3.scaleLinear()
            .range([0, width]);
@@ -20,7 +19,6 @@ class RowChart extends Component{
 
        var color = d3.scaleOrdinal()
            .range(["steelblue", "#ccc"]);
-
        var duration = 750,
            delay = 25;
 
@@ -50,8 +48,9 @@ class RowChart extends Component{
            .attr("y1", "100%");
 
        Promise.all(
-           [d3.json("./POI.json")]
+           [d3.json("./POI0.json")]
        ).then(([root])=>{
+           console.log(root)
            var hierarchy = d3.hierarchy(root);
            partition(hierarchy)
                .sum(d=>d.size)
@@ -84,7 +83,12 @@ class RowChart extends Component{
            // Color the bars as parents; they will fade to children if appropriate.
            // console.log("enter",enter);
            enter.selectAll("text").style("fill-opacity", 1e-6);
-           enter.select("rect").style("fill", color(true));
+           enter.select("rect").style("fill", function (d,i) {
+               if(i>=7){
+                   i++
+               }
+             return d3.schemeCategory10[i]
+           });
 
            // Update the x-scale domain.
            x.domain([0, d3.max(d.children, function(d) { return d.value; })]).nice();
@@ -107,7 +111,9 @@ class RowChart extends Component{
            // Transition entering rects to the new x-scale.
            enterTransition.select("rect")
                .attr("width", function(d) { return x(d.value); })
-               .style("fill", function(d) { return color(!!d.children); });
+               .style("fill", function(d ,i) { if(i>=7){
+                   i++;
+               } return d3.schemeCategory10[i]; });
 
            // Transition exiting bars to fade out.
            var exitTransition = exit.transition()
@@ -210,26 +216,25 @@ class RowChart extends Component{
                .attr("width", function(d) { return x(d.value); })
                .attr("height", barHeight);
 
-           var text = svg.select(".y.axis").selectAll("text")
-               .data(d.children)
-           //update if needed
-               text.attr("class","update")
-               .enter()
-               .append("text")
-               .attr("class","enter")
-               .attr("x", 20)
-               .attr("y", function (d,i) {
-                 return (i)*(barHeight+4.4) + 20 ;
-               })
-                   .merge(text)
-               // .attr("dy", ".35em")
-               // .style("text-anchor", "end")
-               .style("fill","skyblue")
-               .text(function (d) {
-                   // console.log(d);
-                 return d.data.name
-               });
-           text.exit().remove();
+           // var text = svg.select(".y.axis").selectAll("text")
+           //     .data(d.children)
+           // //update if needed
+           //     text.attr("class","update")
+           //     .enter()
+           //     .append("text")
+           //     .attr("class","enter")
+           //     .attr("x", 20)
+           //     .attr("y", function (d,i) {
+           //       return (i)*(barHeight+4.4) + 20 ;
+           //     })
+           //         .merge(text)
+           //     // .attr("dy", ".35em")
+           //     // .style("text-anchor", "end")
+           //     .style("fill","black")
+           //         .attr('class', 'fas fa-user')
+           //     .attr('font-size', function(d) { return 1+'em'} )
+           //         .text(function (d) { return "\uf2b9"});
+           // text.exit().remove();
 
 
            return bar;
@@ -248,7 +253,17 @@ class RowChart extends Component{
 
    render(){
        return(
-           <svg id="rc" ref="rc" width="500px" height="400px" style={{fill:"none"}}></svg>
+           <svg id="rc" ref="rc" width="500px" height="400px" style={{fill:"none"}}>
+               <FontAwesomeIcon icon="palette" size="xs" transform="shrink-15 left-17 up-5.8"         color="rgb(23,118,182)"/>
+               <FontAwesomeIcon icon="university" size="xs" transform="shrink-15 left-17 up-4.2"      color="rgb(255,127,0)"/>
+               <FontAwesomeIcon icon="utensils" size="xs" transform="shrink-15 left-17 up-2.6"        color="rgb(36,161,33)"/>
+               <FontAwesomeIcon icon="map-marked-alt" size="xs" transform="shrink-15 left-17 up-1.0"  color="rgb(216,36,31)"/>
+               <FontAwesomeIcon icon="moon" size="xs" transform="shrink-15 left-17 down-0.6"          color="rgb(149,100,191)"/>
+               <FontAwesomeIcon icon="home" size="xs" transform="shrink-15 left-17 down-2.1"          color="rgb(141,86,73)"/>
+               <FontAwesomeIcon icon="football-ball" size="xs" transform="shrink-15 left-17 down-3.7" color="rgb(229,116,195)"/>
+               <FontAwesomeIcon icon="shopping-cart" size="xs" transform="shrink-15 left-17 down-5.2" color="rgb(188,191,0)"/>
+               <FontAwesomeIcon icon="route" size="xs" transform="shrink-15 left-17 down-6.7"         color="rgb(0,190,208)"/>
+           </svg>
        )
    }
 }

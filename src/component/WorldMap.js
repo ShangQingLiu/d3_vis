@@ -24,12 +24,53 @@ class WorldMap extends Component {
             id: 'light-v9',
             accessToken: 'pk.eyJ1Ijoib3NtYWxsZnJvZ28iLCJhIjoiY2p0em5pNnZ3MzZjMTRlbXVyOTNyYjJ5aiJ9.rUrqX8nYoZXe0mxMowBLyQ'
         }).addTo(global.map);
-        this.getData();
+        // this.getData();
+        // var coords = [[30.132932, 119.963804],[30.132932, 120.437324],
+        //     [30.409347999999998, 119.963804],[30.409347999999998, 120.437324], [30.26, 120.19]];
 
+        // for (var i = 0; i< coords.length; i++){
+        //     L.circle(coords[i],200, {
+        //         color: 'red',
+        //         fillColor: '#f03',
+        //         fillOpacity: 1.0
+        //     }).addTo(global.map);
+        // }
+
+        var left = 119.963804 //new
+        var right = 120.437324
+        var bottom = 30.132932
+        var up = 30.409347999999998
+
+        var blockCount_col = 30;
+        var blockCount_row = 24;
+        var wideRange=right-left;
+        var	heightRange=up-bottom;
+        var wideDistance=wideRange/blockCount_col
+        var heightDistance=heightRange/blockCount_row;
+
+        Promise.all([
+            d3.json("./RP.json")
+        ]).then(([data])=>{
+            var type = [data.P0,data.P1,data.P2,data.P3,data.P4];
+            var key = ['P0','P1','P2','P3','P4'];
+            for (var ii = 0; ii<type.length; ii++){
+                for (var jj=0;jj<type[ii].length; jj++){
+                    var grid = type[ii][jj];
+                    var i = parseInt(grid.slice(0,2));
+                    var j = parseInt(grid.slice(2,4));
+                    var bound=[[bottom+i*heightDistance,left+j*wideDistance],[bottom+(i+1)*heightDistance,left+(j+1)*wideDistance]];
+                    var colorScale=d3.scaleOrdinal()
+                        .domain(['P0','P1','P2','P3','P4'])
+                        .range([d3.schemeCategory10[0],d3.schemeCategory10[1],d3.schemeCategory10[2],d3.schemeCategory10[3],d3.schemeCategory10[4]]);
+                    var color=colorScale(key[ii]);
+                    L.rectangle(bound, {color:color, opacity:1, weight: 1}).addTo(global.map);
+                }
+            }
+        });
     }
     componentWillUpdate(nextProps){
        if(nextProps.redraw !== this.props.redraw){
-           this.getData()
+           // this.getData()
        }
     }
 
@@ -129,7 +170,6 @@ class WorldMap extends Component {
             .attr("cy", function (p) {
                 return p[1];
             });
-        var c10 = d3.schemePaired;
         var voronoiP = path.data(voronoi.polygons(data)).enter().append("path");
         voronoiP.attr("stroke", "black")
             .attr("fill", "none")

@@ -192,7 +192,7 @@ class MapContainer extends Component {
         return (
             <div>
                 <div style={{float:"left"}}>
-                <Card style={{width:'10rem',height:'50rem'}}>
+                <Card style={{width:'20rem',height:'67.5rem'}}>
                     <Card.Header>Panel</Card.Header>
                     <Button varient="primary" size="sm" onClick={this.handleDrawCircle}>draw circle</Button>
                     <Button varient="primary" size="sm" onClick={this.handleDrawPoly}>draw polygon</Button>
@@ -200,13 +200,13 @@ class MapContainer extends Component {
                     <Button varient="primary" size="sm" onClick={this.handleCleanSelection}>clean selection</Button>
                 </Card>
                 </div>
-                <WorldMap onRef={this.onRef} redraw={this.state.redraw}/>
+                <WorldMap onRef={this.onRef} redraw={this.state.redraw} />
                 <div>
-                    <Card style={{float:"left", width:'35rem'}}>
+                    <Card style={{float:"left", width:'50rem', height:'580px'}}>
                         <Card.Header>Panel1</Card.Header>
                         <RowChart/>
                     </Card>
-                    <Card style={{float:"left",width:'34rem'}}>
+                    <Card style={{float:"left",width:'50rem',height:'580px'}}>
                         <Card.Header>Panel2</Card.Header>
                         <MultiLineChart/>
                     </Card>
