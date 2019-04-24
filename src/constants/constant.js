@@ -1,0 +1,17 @@
+export const global = {
+    server : 'http://10.76.2.30',
+    bottom:30.012,
+    overlayPoints : [],
+    top:30.4439 ,
+    left:119.8691,
+    right:120.461,
+    blockCount:100,
+    time:0,
+    meter1:'',
+    mapvLayer:'',
+    map:null,
+    selectGroup:[],
+    selectGroups:{},
+    triangle:null,
+    voronoiData:[],
+};
