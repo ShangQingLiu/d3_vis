@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cb5c83e7-d6f1-489d-b05e-c659efb9f354" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/public/patterOD_On.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/component/deprecate/RowChart_table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/MapContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/MapContainer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/MultiLineChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/MultiLineChart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/RowChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/RowChart.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/component/WorldMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/WorldMap.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/deprecate/Rc0.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/deprecate/Rc0.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/deprecate/WorldMap - 複製.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/deprecate/WorldMap - 複製.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -42,7 +33,7 @@
         <entry file="file://$PROJECT_DIR$/src/component/WorldMap.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="504">
-              <caret line="38" column="39" selection-start-line="38" selection-start-column="39" selection-end-line="38" selection-end-column="39" />
+              <caret line="156" column="25" lean-forward="true" selection-start-line="156" selection-start-column="25" selection-end-line="156" selection-end-column="25" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -50,11 +41,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WorldMap - 複製.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/component/deprecate/WorldMap - 複製.js">
+      <file leaf-file-name="WorldMap.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/component/deprecate/WorldMap.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="18" selection-start-line="18" selection-end-line="18" />
+            <state>
+              <caret line="50" selection-start-line="50" selection-end-line="50" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -92,7 +83,7 @@
       <file leaf-file-name="MultiLineChart.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/component/MultiLineChart.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
+            <state relative-caret-position="6192">
               <caret line="178" column="13" selection-start-line="178" selection-start-column="13" selection-end-line="178" selection-end-column="13" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
@@ -144,6 +135,7 @@
         <option value="$PROJECT_DIR$/src/component/MapContainer.js" />
         <option value="$PROJECT_DIR$/src/component/MultiLineChart.js" />
         <option value="$PROJECT_DIR$/src/App.css" />
+        <option value="$PROJECT_DIR$/src/component/deprecate/WorldMap.js" />
         <option value="$PROJECT_DIR$/src/component/WorldMap.js" />
       </list>
     </option>
@@ -364,11 +356,12 @@
       <workItem from="1556160939825" duration="190000" />
       <workItem from="1556161148998" duration="3669000" />
       <workItem from="1556164840902" duration="120888000" />
+      <workItem from="1556614188227" duration="17840000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="312781000" />
+    <option name="totallyTimeSpent" value="330621000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -380,19 +373,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1096" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14752372" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32911393" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3291536" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32911393" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24941361" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.33960292" />
+      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.33960292" />
       <window_info id="Favorites" order="2" side_tool="true" weight="0.3291634" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="TypeScript" order="8" />
@@ -402,6 +394,7 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3291536" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -411,13 +404,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/public/data.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1116">
-          <caret column="31793" selection-start-column="31793" selection-end-column="31793" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/component/MultiLineChart.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1116">
@@ -642,9 +628,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="72">
           <caret line="2" selection-start-line="2" selection-end-line="2" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -652,9 +635,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
           <caret line="12" column="24" lean-forward="true" selection-start-line="12" selection-start-column="24" selection-end-line="12" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -680,7 +660,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/component/MultiLineChart.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
+        <state relative-caret-position="6192">
           <caret line="178" column="13" selection-start-line="178" selection-start-column="13" selection-end-line="178" selection-end-column="13" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
@@ -718,8 +698,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/component/deprecate/WorldMap - 複製.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
+        <state relative-caret-position="468">
           <caret line="18" selection-start-line="18" selection-end-line="18" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/deprecate/WorldMap.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="50" selection-start-line="50" selection-end-line="50" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
@@ -729,7 +719,7 @@
     <entry file="file://$PROJECT_DIR$/src/component/WorldMap.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="504">
-          <caret line="38" column="39" selection-start-line="38" selection-start-column="39" selection-end-line="38" selection-end-column="39" />
+          <caret line="156" column="25" lean-forward="true" selection-start-line="156" selection-start-column="25" selection-end-line="156" selection-end-column="25" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

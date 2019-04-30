@@ -22,60 +22,6 @@ class WorldMap extends Component {
 
     componentDidMount(){
 
-
-        function describeArc(lng, lat, innerRadius, outerRadius, startAngle, endAngle,value){
-            console.log(value);
-            outerRadius = (outerRadius-innerRadius)*value/20000+innerRadius;
-            let angle = 1/360*Math.PI;
-            //that many of points
-            let inA = [];
-            let outA =[];
-            //((endAngle-startAngle)*Math.PI/180/angle+1) is number of the points that would produce in 1/720*PI scale
-            for(let i = 0; i < ((endAngle-startAngle)*Math.PI/180/angle+1);i++ ){
-                let p = L.latLng(lat,lng);
-                let ep = global.map.latLngToLayerPoint(p);
-
-                let inx = ep.x + innerRadius * Math.cos(startAngle+ i * angle);
-                let iny = ep.y + innerRadius * Math.sin(startAngle+i * angle);
-                let rp = L.point(inx,iny);
-                let ap = global.map.layerPointToLatLng(rp);
-                inA.push([ap.lat,ap.lng]);
-
-                let outx = ep.x + outerRadius * Math.cos(startAngle+i * angle);
-                let outy = ep.y + outerRadius * Math.sin(startAngle+i * angle);
-                rp = L.point(outx,outy);
-                ap = global.map.layerPointToLatLng(rp);
-                outA.push([ap.lat,ap.lng]);
-            }
-            let d = [];
-            if(endAngle==360){
-                d.push("M");
-                d.push(inA[0]);
-                inA.shift();
-                d.push("L");
-                d=d.concat(inA);
-                d.push("M");
-                d.push(outA[0]);
-                outA.shift();
-                d=d.concat(outA);
-            }
-            else{
-                d.push("M");
-                d.push(inA[0]);
-                inA.shift();
-                d.push("L");
-                d = d.concat(inA);
-                d.push("M");
-                d.push(inA[0]);
-                d.push("L");
-                d.push(outA[0]);
-                outA.shift();
-                d=d.concat(outA);
-                d.push(inA[inA.length-1]);
-                // d.push("Z");
-            }
-            return d;
-        }
         global.map = L.map('map').setView([30.27, 120.2], 11);
         global.selectGroups = new L.layerGroup();
         L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -85,89 +31,42 @@ class WorldMap extends Component {
             id: 'light-v9',
             accessToken: 'pk.eyJ1Ijoib3NtYWxsZnJvZ28iLCJhIjoiY2p0em5pNnZ3MzZjMTRlbXVyOTNyYjJ5aiJ9.rUrqX8nYoZXe0mxMowBLyQ'
         }).addTo(global.map);
-            var left = 119.963804; //new
-            var right = 120.437324;
-            var bottom = 30.132932;
-            var up = 30.409347999999998;
+        console.log(describeArc(120.1, 30.1, 100, 0, 180));
+        var path = L.curve(['M',[50.54136296522163,28.520507812500004],
+                'C',[52.214338608258224,28.564453125000004],
+                [48.45835188280866,33.57421875000001],
+                [50.680797145321655,33.83789062500001],
+                'V',[48.40003249610685], 'L',[47.45839225859763,31.201171875],
+                [48.40003249610685,28.564453125000004],'Z'],
+            {color:'red',fill:true}).addTo(global.map);
+        console.log(['M',[50.54136296522163,28.520507812500004],
+                'C',[52.214338608258224,28.564453125000004],
+                [48.45835188280866,33.57421875000001],
+                [50.680797145321655,33.83789062500001],
+                'V',[48.40003249610685], 'L',[47.45839225859763,31.201171875],
+                [48.40003249610685,28.564453125000004],'Z']);
+        let testP = L.point(120.1,30.1);
+        let testP1 = L.point(120.2,30.2);
 
-            var blockCount_col = 30;
-            var blockCount_row = 24;
-            var wideRange = right - left;
-            var heightRange = up - bottom;
-            var wideDistance = wideRange / blockCount_col;
-            var heightDistance = heightRange / blockCount_row;
+        function describeArc(x, y, innerRadius, outerRadius, startAngle, endAngle){
+            let angle = 1/720*Math.PI;
+            //that many of points
 
-            Promise.all([
-                d3.json("./RP.json"), axios.get(global.server + '/vis1/od_aster')
-            ]).then(([data, asterData]) => {
-                console.log(asterData["data"]["data"]);
-                var type = [data.P0, data.P1, data.P2, data.P3, data.P4];
-                var key = ['P0', 'P1', 'P2', 'P3', 'P4'];
+            for(let i = 0; i < ((startAngle-endAngle)*Math.PI/180/angle+1);i++ ){
+                let inx = x + innerRadius * Math.cos(startAngle+ i * angle);
+                let iny = y + innerRadius * Math.sin(startAngle+i * angle);
 
-                // 1.create d3 relation with div and append svg
-                let width = 1088;//rem
-                let height = 520;
-                let innerR = 1;
-                let outerR = 8;
-                let svg = d3.select(global.map.getPanes().overlayPane).append("svg")
-                    .attr("width", width)
-                    .attr("height", height);
-                let g = svg.append("g").attr("class", "leaflet-zoom-hide");
+                let outx = x + outerRadius * Math.cos(startAngle+i * angle);
+                let outy = y + outerRadius * Math.sin(startAngle+i * angle);
 
+            }
+            var d = [
+                "M", [],
+                "L", []
+            ];
 
-                let realbl= L.latLng(bottom,left);
-                let realtl = L.latLng(up,left);
-                let scaleR =(global.map.latLngToLayerPoint(realbl).y-global.map.latLngToLayerPoint(realtl).y)/24/10;
-                //TODO:remove flag
-                let flag=true;
-                //draw square by LLY
-                for (var ii = 0; ii < type.length; ii++) {
-                    for (var jj = 0; jj < type[ii].length; jj++) {
-                        var grid = type[ii][jj];
-                        var i = parseInt(grid.slice(0, 2));
-                        var j = parseInt(grid.slice(2, 4));
-                        var bound = [[bottom + i * heightDistance, left + j * wideDistance], [bottom + (i + 1) * heightDistance, left + (j + 1) * wideDistance]];
-                        var colorScale = d3.scaleOrdinal()
-                            .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
-                            .range([d3.schemePastel1[0], d3.schemePastel1[1], d3.schemePastel1[2], d3.schemePastel1[3], d3.schemePastel1[4]]);
-                        var color = colorScale(key[ii]);
-                        L.rectangle(bound, {color: color, opacity: 1, weight: 1}).addTo(global.map);
-                        let newBound = [[bound[0][0] / 3, bound[0][1] / 3], [bound[1][0] / 3, bound[1][1] / 3]];
-                        let ir = 200;
-                        let cy = left + j * wideDistance+wideDistance/2;
-                        let cx = bottom + i * heightDistance+heightDistance/2;
-                        let oR = 500;
-                        let outR = 640;
-                        L.circle([cx,cy],{radius:ir,color:color,opacity:1}).addTo(global.map);
-                        L.circle([cx,cy],{radius:oR,color:color,opacity:1,fill:false}).addTo(global.map);
-                        L.circle([cx,cy],{radius:outR,color:color,opacity:1,fill:false}).addTo(global.map);
-                        //do 24hr arc
-                        let numGrid = 30 * i + j;
-                        let angs = 0;
-                        let ange = 15;
-                        let anStep = 15;
-                        if(flag){
-                        for(let myI = 0;myI<24;myI++){
-                                L.curve(describeArc(cy+0.00005478, cx, 3.5, 7.9, angs+myI*anStep, ange+myI*anStep, asterData["data"]["data"][numGrid][myI][1]),
-                                    {color: 'red', fill: true}).addTo(global.map);
-                                L.curve(describeArc(cy+0.00005478, cx, 3.5, 7.9, angs+myI*anStep, ange+myI*anStep, asterData["data"]["data"][numGrid][myI][2]),
-                                    {color: 'blue', fill: true}).addTo(global.map);
-                        }
-                            // flag = false;
-                        }
-                        //draw arc
-                        // L.circle([cx,cy],{radius:outR,color:"#000000",fill:false,fillOpacity:0.1}).addTo(global.map)
-
-                        // console.log([left+j*wideDistance, bottom+i*heightDistance])
-                        //     L.circle([bottom+i*heightDistance+heightDistance/2, left+j*wideDistance+wideDistance/2],200, {
-                        //         color: color,
-                        //         fillColor: color,
-                        //         fillOpacity: 1.0
-                        //     }).addTo(global.map);
-                    }
-
-                }
-            });
+            return d;
+        }
     }
     // componentDidMount() {
     //     // global.map = L.map('map').setView([30.27, 120.2], 11);

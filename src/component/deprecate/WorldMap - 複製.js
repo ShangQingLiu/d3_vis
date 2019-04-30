@@ -115,7 +115,7 @@ class WorldMap extends Component {
 
             let flat = true;
             // draw plot by LSQ
-            for (let i = 0; i < 2/*asterData["data"]["data"].length*/; i++) {
+            for (let i = 0; i < asterData["data"]["data"].length; i++) {
                 //TODO:nume define as the nume from the source
                 let nume = asterData["data"]["data"][i][0][0];
                 let pos_x = nume % 30;
@@ -142,13 +142,13 @@ class WorldMap extends Component {
                         return d[1]/*onvalue*/ / m * 100
                     });
                 let arc = d3.arc()
-                    .innerRadius(innerR*global.map.getZoom()/11)
+                    .innerRadius(innerR)
                     .outerRadius(function (d, i) {
                         if (d["data"][2]/*offvalue*/ > d["data"][1]/*onvalue*/)
                         //選大的
-                            return ((outerR - innerR) * ((d["data"][2] / m)) + innerR)*global.map.getZoom()/11;
+                            return ((outerR - innerR) * ((d["data"][2] / m)) + innerR);
                         else {
-                            return ((outerR - innerR) * ((d["data"][1] / m)) + innerR)*global.map.getZoom()/11;
+                            return ((outerR - innerR) * ((d["data"][1] / m)) + innerR);
                         }
                     })
                     .startAngle(function (d, i) {
@@ -158,13 +158,13 @@ class WorldMap extends Component {
                         return (i + 1) * Math.PI / 24 * 2
                     });
                 let arc_in = d3.arc()
-                    .innerRadius(innerR*global.map.getZoom()/11)
+                    .innerRadius(innerR)
                     .outerRadius(function (d) {
                         if (d["data"][2]/*offvalue*/ > d["data"][1]/*onvalue*/)
                         //選小的
-                            return ((outerR - innerR) * ((d["data"][1] / m)) + innerR)*global.map.getZoom()/11;
+                            return ((outerR - innerR) * ((d["data"][1] / 100)) + innerR);
                         else {
-                            return ((outerR - innerR) * ((d["data"][2] / m)) + innerR)*global.map.getZoom()/11;
+                            return ((outerR - innerR) * ((d["data"][2] / 100)) + innerR);
                         }
                     })
                     .startAngle(function (d, i) {
@@ -264,119 +264,119 @@ class WorldMap extends Component {
 
 
             }
-            global.map.on("zoom", update);
-            function update() {
-                console.log("update",global.map.getZoom());
-                //update center circle
-                d3.selectAll(".centerCircle")
-                    .attr("r", 1*global.map.getZoom()/11)
-                    .attr("cx", function (d,i) {
-                         let a = n2GIS(i);
-                         return a.x;
-                        }
-                    )
-                    .attr("cy", function (d,i) {
-                         let a = n2GIS(i);
-                         return a.y;
-                        } );
-                let arc = d3.arc()
-                    .innerRadius(innerR*Math.pow(2,global.map.getZoom()-11))
-                    .outerRadius(function (d, i) {
-                        if (d["data"][2]/*offvalue*/ > d["data"][1]/*onvalue*/)
-                        //選大的
-                            return ((outerR - innerR)*Math.pow(2,global.map.getZoom()-11) * ((d["data"][2] / m)) + innerR*Math.pow(2,global.map.getZoom()-11));
-                        else {
-                            return ((outerR - innerR)*Math.pow(2,global.map.getZoom()-11) * ((d["data"][1] / m)) + innerR*Math.pow(2,global.map.getZoom()-11));
-                        }
-                    })
-                    .startAngle(function (d, i) {
-                        return (i) * Math.PI / 24 * 2
-                    })
-                    .endAngle(function (d, i) {
-                        return (i + 1) * Math.PI / 24 * 2
-                    });
-                d3.selectAll(".solidArc")
-                    .attr("d", arc)
-                    .attr("transform", function (d, i) {
-                        console.log("t")
-                        let point = n2GIS(i);
-                        return "translate(" + point.x + "," + point.y + ")"
-                    });
-                let arc_in = d3.arc()
-                    .innerRadius(innerR*Math.pow(2,global.map.getZoom()-11))
-                    .outerRadius(function (d) {
-                        if (d["data"][2]/*offvalue*/ > d["data"][1]/*onvalue*/)
-                        //選小的
-                            return ((outerR - innerR)*Math.pow(2,global.map.getZoom()-11) * ((d["data"][1] / m)) + innerR*Math.pow(2,global.map.getZoom()-11));
-                        else {
-                            return ((outerR - innerR)*Math.pow(2,global.map.getZoom()-11) * ((d["data"][2] / m)) + innerR*Math.pow(2,global.map.getZoom()-11));
-                        }
-                    })
-                    .startAngle(function (d, i) {
-                        return (i) * Math.PI / 24 * 2
-                    })
-                    .endAngle(function (d, i) {
-                        return (i + 1) * Math.PI / 24 * 2
-                    });
-                d3.selectAll(".solidArc_in")
-                    .attr("d", arc_in)
-                    .attr("transform", function (d, i) {
-                        let point = n2GIS(i);
-                        return "translate(" + point.x + "," + point.y + ")"
-                    });
-                let outLineArc = d3.arc()
-                    .innerRadius(innerR*Math.pow(2,global.map.getZoom()-11))
-                    .outerRadius((outerR + outerR / 10)*Math.pow(2,global.map.getZoom()-11))
-                    .startAngle(function (d, i) {
-                        return (0) * Math.PI * 2
-                    })
-                    .endAngle(function (d, i) {
-                        return (0 + 1) * Math.PI * 2
-                    });
-                d3.selectAll(".outlineArc")
-                    .attr("d", outLineArc)
-                    .attr("transform", function (d, i) {
-                        let point = n2GIS(i);
-                        return "translate(" + point.x + "," + point.y + ")"
-                    });
-                let surround = d3.arc()
-                    .innerRadius(innerR*Math.pow(2,global.map.getZoom()-11))
-                    .outerRadius((outerR + outerR / 10 * 3)*Math.pow(2,global.map.getZoom()-11))
-                    .startAngle(function (d, i) {
-                        return (0) * Math.PI * 2
-                    })
-                    .endAngle(function (d, i) {
-                        return (0 + 1) * Math.PI * 2
-                    });
-                d3.selectAll(".surround")
-                    .attr("d", surround)
-                    .attr("transform", function (d, i) {
-                        let point = n2GIS(i);
-                        return "translate(" + point.x + "," + point.y + ")"
-                    });
-                let r_POIcircle = outerR + outerR / 10 * 2;
-                let angle_POI = 2 * Math.PI / 9;
-                d3.selectAll(".pPOI")
-                    .attr("r", 1*Math.pow(2,global.map.getZoom()-11))
-                    .attr("cx", function (d,i) {
-                            let a = n2GIS(i);
-                            return a.x+ r_POIcircle * Math.cos(i * angle_POI);
-                        }
-                    )
-                    .attr("cy", function (d,i) {
-                        let a = n2GIS(i);
-                        return a.y+ r_POIcircle * Math.sin(i * angle_POI);
-                    } );
-                // d3.selectAll(".arcPic").remove()
-            }
-            function n2GIS(nume){
-                let pos_x = nume % 30;
-                let pos_y = Math.floor(nume / 30);
-                let rx = left + pos_x * wideDistance + wideDistance / 2;
-                let ry = bottom + pos_y * heightDistance + heightDistance / 2;
-                let point = global.map.latLngToLayerPoint(new L.latLng(ry, rx));
-                return point
-            }
+            // global.map.on("zoom", update);
+            // function update() {
+            //     console.log("update",global.map.getZoom());
+            //     //update center circle
+            //     d3.selectAll(".centerCircle")
+            //         .attr("r", 1*global.map.getZoom()/11)
+            //         .attr("cx", function (d,i) {
+            //              let a = n2GIS(i);
+            //              return a.x;
+            //             }
+            //         )
+            //         .attr("cy", function (d,i) {
+            //              let a = n2GIS(i);
+            //              return a.y;
+            //             } );
+            //     let arc = d3.arc()
+            //         .innerRadius(innerR*Math.pow(2,global.map.getZoom()-11))
+            //         .outerRadius(function (d, i) {
+            //             if (d["data"][2]/*offvalue*/ > d["data"][1]/*onvalue*/)
+            //             //選大的
+            //                 return ((outerR - innerR)*Math.pow(2,global.map.getZoom()-11) * ((d["data"][2] / m)) + innerR*Math.pow(2,global.map.getZoom()-11));
+            //             else {
+            //                 return ((outerR - innerR)*Math.pow(2,global.map.getZoom()-11) * ((d["data"][1] / m)) + innerR*Math.pow(2,global.map.getZoom()-11));
+            //             }
+            //         })
+            //         .startAngle(function (d, i) {
+            //             return (i) * Math.PI / 24 * 2
+            //         })
+            //         .endAngle(function (d, i) {
+            //             return (i + 1) * Math.PI / 24 * 2
+            //         });
+            //     d3.selectAll(".solidArc")
+            //         .attr("d", arc)
+            //         .attr("transform", function (d, i) {
+            //             console.log("t")
+            //             let point = n2GIS(i);
+            //             return "translate(" + point.x + "," + point.y + ")"
+            //         });
+            //     let arc_in = d3.arc()
+            //         .innerRadius(innerR*Math.pow(2,global.map.getZoom()-11))
+            //         .outerRadius(function (d) {
+            //             if (d["data"][2]/*offvalue*/ > d["data"][1]/*onvalue*/)
+            //             //選小的
+            //                 return ((outerR - innerR)*Math.pow(2,global.map.getZoom()-11) * ((d["data"][1] / m)) + innerR*Math.pow(2,global.map.getZoom()-11));
+            //             else {
+            //                 return ((outerR - innerR)*Math.pow(2,global.map.getZoom()-11) * ((d["data"][2] / m)) + innerR*Math.pow(2,global.map.getZoom()-11));
+            //             }
+            //         })
+            //         .startAngle(function (d, i) {
+            //             return (i) * Math.PI / 24 * 2
+            //         })
+            //         .endAngle(function (d, i) {
+            //             return (i + 1) * Math.PI / 24 * 2
+            //         });
+            //     d3.selectAll(".solidArc_in")
+            //         .attr("d", arc_in)
+            //         .attr("transform", function (d, i) {
+            //             let point = n2GIS(i);
+            //             return "translate(" + point.x + "," + point.y + ")"
+            //         });
+            //     let outLineArc = d3.arc()
+            //         .innerRadius(innerR*Math.pow(2,global.map.getZoom()-11))
+            //         .outerRadius((outerR + outerR / 10)*Math.pow(2,global.map.getZoom()-11))
+            //         .startAngle(function (d, i) {
+            //             return (0) * Math.PI * 2
+            //         })
+            //         .endAngle(function (d, i) {
+            //             return (0 + 1) * Math.PI * 2
+            //         });
+            //     d3.selectAll(".outlineArc")
+            //         .attr("d", outLineArc)
+            //         .attr("transform", function (d, i) {
+            //             let point = n2GIS(i);
+            //             return "translate(" + point.x + "," + point.y + ")"
+            //         });
+            //     let surround = d3.arc()
+            //         .innerRadius(innerR*Math.pow(2,global.map.getZoom()-11))
+            //         .outerRadius((outerR + outerR / 10 * 3)*Math.pow(2,global.map.getZoom()-11))
+            //         .startAngle(function (d, i) {
+            //             return (0) * Math.PI * 2
+            //         })
+            //         .endAngle(function (d, i) {
+            //             return (0 + 1) * Math.PI * 2
+            //         });
+            //     d3.selectAll(".surround")
+            //         .attr("d", surround)
+            //         .attr("transform", function (d, i) {
+            //             let point = n2GIS(i);
+            //             return "translate(" + point.x + "," + point.y + ")"
+            //         });
+            //     let r_POIcircle = outerR + outerR / 10 * 2;
+            //     let angle_POI = 2 * Math.PI / 9;
+            //     d3.selectAll(".pPOI")
+            //         .attr("r", 1*Math.pow(2,global.map.getZoom()-11))
+            //         .attr("cx", function (d,i) {
+            //                 let a = n2GIS(i);
+            //                 return a.x+ r_POIcircle * Math.cos(i * angle_POI);
+            //             }
+            //         )
+            //         .attr("cy", function (d,i) {
+            //             let a = n2GIS(i);
+            //             return a.y+ r_POIcircle * Math.sin(i * angle_POI);
+            //         } );
+            //     // d3.selectAll(".arcPic").remove()
+            // }
+            // function n2GIS(nume){
+            //     let pos_x = nume % 30;
+            //     let pos_y = Math.floor(nume / 30);
+            //     let rx = left + pos_x * wideDistance + wideDistance / 2;
+            //     let ry = bottom + pos_y * heightDistance + heightDistance / 2;
+            //     let point = global.map.latLngToLayerPoint(new L.latLng(ry, rx));
+            //     return point
+            // }
         });
     }
 
