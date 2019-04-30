@@ -166,7 +166,6 @@ class MapContainer extends Component {
                 global.selectGroup.push(rectangle);
                 global.selectGroups = L.layerGroup(global.selectGroup);
                 global.map.addLayer(global.selectGroups);
-                console.log(global.selectGroups);
                 this.setState(state=>({
                     redraw:!state.redraw
                 }));
@@ -192,7 +191,7 @@ class MapContainer extends Component {
         return (
             <div>
                 <div style={{float:"left"}}>
-                <Card style={{width:'20rem',height:'67.5rem'}}>
+                <Card style={{width:'10rem',height:'67.5rem'}}>
                     <Card.Header>Panel</Card.Header>
                     <Button varient="primary" size="sm" onClick={this.handleDrawCircle}>draw circle</Button>
                     <Button varient="primary" size="sm" onClick={this.handleDrawPoly}>draw polygon</Button>
@@ -202,13 +201,13 @@ class MapContainer extends Component {
                 </div>
                 <WorldMap onRef={this.onRef} redraw={this.state.redraw} />
                 <div>
-                    <Card style={{float:"left", width:'50rem', height:'580px'}}>
+                    <Card style={{float:"left", width:'50rem', height:'560px'}}>
                         <Card.Header>Panel1</Card.Header>
-                        <RowChart/>
+                        <RowChart redraw={this.state.redraw}/>
                     </Card>
-                    <Card style={{float:"left",width:'50rem',height:'580px'}}>
+                    <Card style={{float:"left",width:'50rem',height:'560px'}}>
                         <Card.Header>Panel2</Card.Header>
-                        <MultiLineChart/>
+                        <MultiLineChart redraw={this.state.redraw}/>
                     </Card>
                 </div>
 

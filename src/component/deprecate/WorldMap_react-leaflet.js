@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
 import L from 'leaflet';
-import '@elfalem/leaflet-curve'
 import axios from 'axios';
 import * as d3 from 'd3';
 import {global} from "../constants/constant";
 import 'leaflet-arc'
-import {AntPath,antPath} from "react-leaflet-ant-path";
 import {Map,
 TileLayer} from 'react-leaflet'
 
@@ -13,56 +11,12 @@ const center=[30.27, 120.2];
 class WorldMap extends Component {
     constructor(props) {
         super(props)
-        this.map = React.createRef()
     }
 
     shouldComponentUpdata() {
         return false;
     }
 
-    componentDidMount(){
-
-        global.map = L.map('map').setView([30.27, 120.2], 11);
-        global.selectGroups = new L.layerGroup();
-        L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-            // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            attribution: '© <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-            id: 'light-v9',
-            accessToken: 'pk.eyJ1Ijoib3NtYWxsZnJvZ28iLCJhIjoiY2p0em5pNnZ3MzZjMTRlbXVyOTNyYjJ5aiJ9.rUrqX8nYoZXe0mxMowBLyQ'
-        }).addTo(global.map);
-        console.log(describeArc(120.1, 30.1, 100, 0, 180))
-        var path = L.curve(['M',[50.54136296522163,28.520507812500004],
-                'C',[52.214338608258224,28.564453125000004],
-                [48.45835188280866,33.57421875000001],
-                [50.680797145321655,33.83789062500001],
-                'V',[48.40003249610685], 'L',[47.45839225859763,31.201171875],
-                [48.40003249610685,28.564453125000004],'Z'],
-            {color:'red',fill:true}).addTo(global.map);
-        function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-            var angleInRadians = (angleInDegrees-90) * Math.PI / 180.0;
-
-            return {
-                x: centerX + (radius * Math.cos(angleInRadians)),
-                y: centerY + (radius * Math.sin(angleInRadians))
-            };
-        }
-
-        function describeArc(x, y, radius, startAngle, endAngle){
-
-            var start = polarToCartesian(x, y, radius, endAngle);
-            var end = polarToCartesian(x, y, radius, startAngle);
-
-            var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-
-            var d = [
-                "M", [start.x, start.y],
-                "A", [radius, radius, 0, largeArcFlag, 0, end.x, end.y]
-            ];
-
-            return d;
-        }
-    }
     // componentDidMount() {
     //     // global.map = L.map('map').setView([30.27, 120.2], 11);
     //     // global.selectGroups = new L.layerGroup();
@@ -545,8 +499,12 @@ class WorldMap extends Component {
 
     render() {
         return (
-            <div id="map" ref={this.map}>
-            </div>
+            <Map center={center}zoom={11} >
+                <TileLayer
+                    attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
+                    url='https://api.mapbox.com/styles/v1/osmallfrogo/cjumipd087qvo1ftqrkq7hcxb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoib3NtYWxsZnJvZ28iLCJhIjoiY2p0em5pNnZ3MzZjMTRlbXVyOTNyYjJ5aiJ9.rUrqX8nYoZXe0mxMowBLyQ'
+                />
+            </Map>
         )
     }
 }
