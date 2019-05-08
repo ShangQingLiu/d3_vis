@@ -22,6 +22,7 @@
     "leaflet": "^1.4.0",
     "leaflet-ant-path": "^1.2.1",
     "leaflet-arc": "^1.0.2",
+    "leaflet-curve": "^1.0.0",
     "mapbox-gl": "^0.53.1",
     "moment": "^2.24.0",
     "proj4leaflet": "^1.0.2",
@@ -30,6 +31,7 @@
     "react-dom": "^16.8.6",
     "react-leaflet": "^2.2.1",
     "react-leaflet-ant-path": "^1.1.0",
+    "react-leaflet-curve": "^1.0.0",
     "react-scripts": "2.1.8"
   },
   "scripts": {

@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import * as d3 from 'd3'
-import {global} from "../constants/constant";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import axios from 'axios';
+import axios from 'axios'
+import {global,POIMap} from "../constants/constant";
 
 
 class RowChart extends Component {
@@ -11,165 +10,302 @@ class RowChart extends Component {
         this.rc0 = React.createRef();
     }
 
+    state={
+        xScale:{}
+    };
     componentDidMount() {
-        //declaration basic things
-        var margin = {top: 20, right: 10, bottom: 0, left: 10},
-            width = 140 - margin.left - margin.right,
-            height = 250 - margin.top - margin.bottom;
-        var barHeight=10;
-        initTable(this.rc0.current);
-        function initTable(rc0){
-            Promise.all([d3.json('POI1.json'),d3.json('POI2.json'),d3.json('POI3.json'),d3.json('POI4.json'),d3.json('POI0.json')
-            ]).then((inputData)=>{
-                let dataSize=inputData.length;
-                for(let ite=0;ite<dataSize;ite++) {
-                    let data = inputData[ite];
-                    var rootDom = d3.select(rc0);
-                    var svg = rootDom.append("svg")
-                        .attr("width", width + margin.left + margin.right)
-                        .attr("height", height + margin.top + margin.bottom)
-                        .append("g")
-                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        this.initTable();
+    }
 
-                    //add rect background
-                    svg.append("rect")
-                        .attr("class", "background")
-                        .attr("width", width)
-                        .attr("height", height)
+    componentWillUpdate(nextProps){
+        if(nextProps.redraw !== this.props.redraw){
+            this.redrawTable()
+        }
+    }
+    initTable() {
+        Promise.all([d3.json('POI1.json'), d3.json('POI2.json'), d3.json('POI3.json'), d3.json('POI4.json'), d3.json('POI0.json')
+        ]).then((inputData) => {
+            var myrootDom = d3.select(this.rc0.current);
+            var mysvg = myrootDom.append("svg")
+                .attr("width", 958)
+                .attr("height", 300);
+            let foreignObject = mysvg.append("foreignObject")
+                .attr("width", 958)
+                .attr("height", 300);
+            let table = foreignObject.append("xhtml:body")
+                .append("table")
+                .attr("text-align","center")
+                .attr('style','font-size:0.5rem')
+                // .attr("cellpadding","10")
+                .attr('bordercolor',"#ffffff")
+                .attr("border", "5");
+            //POI symbol map
+            let poimap = new Map();
+            poimap.set("0", 'art-en.svg');
+            poimap.set("1", 'collage-university.svg');
+            poimap.set("2", 'food.svg');
+            poimap.set("3", 'nightlife.svg');
+            poimap.set("4", 'outdoor.svg');
+            poimap.set("5", 'professional.svg');
+            poimap.set("6", 'residence.svg');
+            poimap.set("7", 'shop.svg');
+            poimap.set("8", 'travel.svg');
+            let tr1 = table.append("tr");
+            tr1.append("th")
+                .attr("bgcolor", "LightGrey");
+            for (let i = 0; i < 9; i++) {
+                 let th = tr1.append("th")
+                    .attr("width", 90)
+                    .attr("height", 90)
+                    .attr("bgcolor", "LightGrey");
 
-                    //add g for x axis
-                    svg.append("g")
-                        .attr("class", "x axis");
+                    th.append("embed")
+                    .attr("src", function () {
+                        return poimap.get(i.toString())
+                    })
+                    .attr("display", "block")
+                    .attr("width", 30)
+                    .attr("height", 30);
+                    th.append("p")
+                    .text(POIMap[i])
 
-                    //add g for y axis
-                    svg.append("g")
-                        .attr("class", "y axis")
-                        .append("line");
 
-                    //x-scale
-                    var xScale = d3.scaleLinear()
-                        .range([0, width]);
-
-                    //xAxis
-                    var xAxis = d3.axisTop(xScale)
-                        .ticks(2);
-                    //define partition
-                    var partition = d3.partition()
-                        .size(function (d) {
-                            if ("children" in d) {
-                                let r = 0;
-                                for (let i = 0; i < d.children.length; i++) {
-                                    r += d.children[i].size;
-                                }
-                                return r;
+            }
+            for (let i = 0; i < 5; i++) {
+                let da = inputData[i];
+                //define partition
+                var partition = d3.partition()
+                    .size(function (d) {
+                        if ("children" in d) {
+                            let r = 0;
+                            for (let i = 0; i < d.children.length; i++) {
+                                r += d.children[i].size;
                             }
-                            else {
-                                return d.size;
+                            return r;
+                        }
+                        else {
+                            return d.size;
+                        }
+                    });
+
+                //create a hierarchy node by POI data
+                var node = d3.hierarchy(da);
+                //sort by size
+                partition(node)
+                    .sum(function (d) {
+                        if ("children" in d) {
+                            let r = 0;
+                            for (let i = 0; i < d.children.length; i++) {
+                                r += d.children[i].size;
                             }
-                        });
-
-                    //create a hierarchy node by POI data
-                    var node = d3.hierarchy(data);
-                    //sort by size
-                    partition(node)
-                        .sum(function (d) {
-                            if ("children" in d) {
-                                let r = 0;
-                                for (let i = 0; i < d.children.length; i++) {
-                                    r += d.children[i].size;
-                                }
-                                return r;
-                            }
-                            else {
-                                return d.size;
-                            }
-                        })
-                        .sort(function (a, b) {
-                            return a.size - b.size;
-                        })
-                        .descendants();
-
-                    //create x domain from node.value
-                    xScale.domain([0, d3.extent(node.children.map(function (child) {
-                        return child.value;
-                    }))[1]]).nice();
-                    svg.selectAll('.x.axis')
-                        .call(xAxis);
-
-                    //draw bar
-                    var bar = svg.insert("g", ".y.axis")
-                        .attr("class", "enter")
-                        .attr("transform", "translate(0,5)")
-                        .selectAll("g")
-                        .data(node.children)
-                        .enter().append("g")
-                        .style("cursor", function (d) {
-                            return !d.children ? null : "pointer";
-                        })
-                    // .on("click", down);
-                    bar.append("rect")
-                        .attr("width", function (d) {
-                            return xScale(d.value);
-                        })
-                        .attr("height", barHeight)
-                        .attr("fill", "steelblue")
-                        .attr("transform", stack());
-
-
-                    function stack() {
-                        var y0 = 0;
-                        return function (d) {
-                            var tx = "translate(" + 0 + "," + y0 * (barHeight * 1.2) + ")";
-                            y0++;
-                            return tx;
-                        };
+                            return r;
+                        }
+                        else {
+                            return d.size;
+                        }
+                    })
+                    .sort(function (a, b) {
+                        return a.size - b.size;
+                    })
+                    .descendants();
+                //x-scale
+                let xScale = d3.scaleLinear()
+                    .range([0, 80]);
+                xScale.domain([0, d3.extent(node.children.map(function (child) {
+                    return child.value;
+                }))[1]]).nice();
+                let tr2 = table.append("tr");
+                for (let j = 0; j < 10; j++) {
+                    if (j === 0) {
+                        tr2.append("td")
+                            .text("P" + (i + 1).toString())
+                            .attr("width", 90)
+                            .attr("height", 40)
                     }
-
-                    // drawRC(node,0);
-                    function drawRC(d, i) {
-                        //set animation time
-                        let duration = 750;
-                        let delay = 25;
-                        let end = duration + d.children.length * delay;
-                        //prevent data error
-                        if (!("children" in d)) return;
-
-                        // Mark any currently-displayed bars as exiting.
-                        var exit = svg.selectAll(".enter")
-                            .attr("class", "exit");
-                        // Entering nodes immediately obscure the clicked-on bar, so hide it.
-                        exit.selectAll("rect").filter(function (p) {
-                            return p === d;
-                        })
-                            .style("fill-opacity", 1e-6);
+                    else {
+                        tr2.append("td")
+                            .attr("text-align","left")
+                            .append("svg")
+                            .attr("width", 90)
+                            .attr("height", 35)
+                            .append("rect")
+                            .attr("class","poiRect"+i.toString())
+                            .attr("width", xScale(node.children[j - 1].value))
+                            .attr("height", 40)
+                            .attr("fill", d3.schemePastel1[i])
+                    }
+                    if (i % 2 !== 0) {
+                        tr2.attr("bgcolor", "LightGrey");
                     }
                 }
-            })
-        }
-        //appendImage
-        // svg.append("svg:image")
-        //     .attr("xlink:href", "/cart.svg")
-        //     .attr("width", 200)
-        //     .attr("height", 200)
-        //     .attr("x", 228)
-        //     .attr("y", 53);
+            }
+            let dataSize = inputData.length;
+            for (let ite = 0; ite < dataSize; ite++) {
+                // let data = inputData[ite];
+                // var rootDom = d3.select(rc0);
+                // var svg = rootDom.append("svg")
+                //     .attr("width", width + margin.left + margin.right)
+                //     .attr("height", height + margin.top + margin.bottom)
+                //     .append("g")
+                //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                //
+                // //add rect background
+                // svg.append("rect")
+                //     .attr("class", "background")
+                //     .attr("width", width)
+                //     .attr("height", height);
+                //
+                // //add g for x axis
+                // svg.append("g")
+                //     .attr("class", "x axis");
+                //
+                // //add g for y axis
+                // svg.append("g")
+                //     .attr("class", "y axis")
+                //     .append("line");
+                //
+                // //x-scale
+                // var xScale = d3.scaleLinear()
+                //     .range([0, width]);
+                //
+                // //xAxis
+                // var xAxis = d3.axisTop(xScale)
+                //     .ticks(2);
+                // //define partition
+                // var partition = d3.partition()
+                //     .size(function (d) {
+                //         if ("children" in d) {
+                //             let r = 0;
+                //             for (let i = 0; i < d.children.length; i++) {
+                //                 r += d.children[i].size;
+                //             }
+                //             return r;
+                //         }
+                //         else {
+                //             return d.size;
+                //         }
+                //     });
+                //
+                // //create a hierarchy node by POI data
+                // var node = d3.hierarchy(data);
+                // //sort by size
+                // partition(node)
+                //     .sum(function (d) {
+                //         if ("children" in d) {
+                //             let r = 0;
+                //             for (let i = 0; i < d.children.length; i++) {
+                //                 r += d.children[i].size;
+                //             }
+                //             return r;
+                //         }
+                //         else {
+                //             return d.size;
+                //         }
+                //     })
+                //     .sort(function (a, b) {
+                //         return a.size - b.size;
+                //     })
+                //     .descendants();
 
+                //create x domain from node.value
+                // xScale.domain([0, d3.extent(node.children.map(function (child) {
+                //     return child.value;
+                // }))[1]]).nice();
+                // svg.selectAll('.x.axis')
+                //     .call(xAxis);
+
+                //draw bar
+                // var bar = svg.insert("g", ".y.axis")
+                //     .attr("class", "enter")
+                //     .attr("transform", "translate(0,5)")
+                //     .selectAll("g")
+                //     .data(node.children)
+                //     .enter().append("g")
+                //     .style("cursor", function (d) {
+                //         return !d.children ? null : "pointer";
+                //     });
+                // // .on("click", down);
+                // bar.append("rect")
+                //     .attr("width", function (d) {
+                //         return xScale(d.value);
+                //     })
+                //     .attr("height", barHeight)
+                //     .attr("fill", "steelblue")
+                //     .attr("transform", stack());
+
+
+                // function stack() {
+                //     var y0 = 0;
+                //     return function (d) {
+                //         var tx = "translate(" + 0 + "," + y0 * (barHeight * 1.2) + ")";
+                //         y0++;
+                //         return tx;
+                //     };
+                // }
+                //
+                // // drawRC(node,0);
+                // function drawRC(d, i) {
+                //     //set animation time
+                //     let duration = 750;
+                //     let delay = 25;
+                //     let end = duration + d.children.length * delay;
+                //     //prevent data error
+                //     if (!("children" in d)) return;
+                //
+                //     // Mark any currently-displayed bars as exiting.
+                //     var exit = svg.selectAll(".enter")
+                //         .attr("class", "exit");
+                //     // Entering nodes immediately obscure the clicked-on bar, so hide it.
+                //     exit.selectAll("rect").filter(function (p) {
+                //         return p === d;
+                //     })
+                //         .style("fill-opacity", 1e-6);
+                // }
+            }
+        })
+    }
+
+    redrawTable() {
+        let recs = Object.values(global.selectGroups._layers);
+        let p2 = recs[0]._latlngs[0][1];
+        let p4 = recs[0]._latlngs[0][3];
+        let lu = [p2.lat, p2.lng].toString();
+        let rb = [p4.lat, p4.lng].toString();
+        let ty = "partial".toString();
+        let params = {
+            bound1: lu,
+            bound2: rb,
+             ty:ty
+        };
+        Promise.all([
+            axios.get(global.server + '/vis1/poi_total', {params})
+        ]).then(([comedata]) => {
+           console.log("data",comedata);
+           let data = comedata["data"]["data"];
+           //choose all poi rect
+            for(let i=0;i<5;i++){
+                let useData = [];
+                for(let j=0;j<9;j++){
+                    if(Object.keys(data[i]).length !== 0){
+                        useData.push(data[i][POIMap[j]]);
+                    }
+                }
+                let xScale = d3.scaleLinear()
+                    .range([0, 80]);
+                xScale.domain(d3.extent(useData));
+                console.log("useData",useData)
+                d3.selectAll(".poiRect"+ i.toString())
+                    .data(useData)
+                    .attr("width",(d)=>xScale(d));
+            }
+
+        })
     }
 
 
     render() {
         return (
-            <div id="rc0" ref={this.rc0} width="500px" height="400px" style={{fill: "none"}}>
-                {/*<FontAwesomeIcon icon="palette" size="xs" transform="shrink-15 left-17 up-5.8"         color="rgb(23,118,182)"/>*/}
-                {/*<FontAwesomeIcon icon="university" size="xs"     transform="shrink-15 left-17 up-4.2"      color="rgb(255,127,0)"/>*/}
-                {/*<FontAwesomeIcon icon="utensils" size="xs"       transform="shrink-15 left-17 up-2.6"        color="rgb(36,161,33)"/>*/}
-                {/*<FontAwesomeIcon icon="map-marked-alt" size="xs" transform="shrink-15 left-17 up-1.0"  color="rgb(216,36,31)"/>*/}
-                {/*<FontAwesomeIcon icon="moon" size="xs"           transform="shrink-15 left-17 down-0.6"          color="rgb(149,100,191)"/>*/}
-                {/*<FontAwesomeIcon icon="home" size="xs"           transform="shrink-15 left-17 down-2.1"          color="rgb(141,86,73)"/>*/}
-                {/*<FontAwesomeIcon icon="football-ball" size="xs"  transform="shrink-15 left-17 down-3.7" color="rgb(229,116,195)"/>*/}
-                {/*<FontAwesomeIcon icon="shopping-cart" size="xs"  transform="shrink-15 left-17 down-5.2" color="rgb(188,191,0)"/>*/}
-                {/*<FontAwesomeIcon icon="route" size="xs"          transform="shrink-15 left-17 down-6.7"         color="rgb(0,190,208)"/>*/}
-            </div>
+            <div id="rc0" ref={this.rc0} width="958px" height="350px" style={{fill: "none"}}></div>
         )
     }
 }

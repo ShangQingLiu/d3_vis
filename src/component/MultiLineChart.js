@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import * as d3 from 'd3'
-import dc from 'dc'
-import crossfilter from 'crossfilter2'
 import axios from 'axios';
-import moment from 'moment'
 import {global} from '../constants/constant'
 
 class MultiLineChart extends Component {
@@ -13,8 +10,9 @@ class MultiLineChart extends Component {
     }
 
     componentDidMount() {
-        let height = 150;
-        let width = 420;
+        let height = 250;
+        let width = 880;
+        let margin = ({top: 20, right: 20, bottom: 20, left: 55});
         let param={
             day:[1,2]
         };
@@ -22,12 +20,10 @@ class MultiLineChart extends Component {
             axios.get(global.server + '/vis1/odon_1',{param})
             ,d3.csv('patterOD_On.csv')
             ]).then(([data,data1])=>{
-                console.log("data1",data1)
-            let margin = ({top: 20, right: 20, bottom: 20, left: 40});
             let svg = d3.select(this.mlc.current)
                 .attr("width",width+margin.left+margin.right)
                 .attr("height",height+margin.top+margin.bottom)
-                .append("g") .attr("transform","translate("+margin.left+","+margin.right+")");
+                .append("g").attr("transform","translate("+margin.left+","+margin.right+")");
             let xScale = d3.scaleLinear()
                 .domain([0,23])
                 .range([0,width]);
@@ -47,9 +43,19 @@ class MultiLineChart extends Component {
                 .call(d3.axisBottom(xScale));
             svg.append("g")
                 .attr("class","y axis")
-                .call(d3.axisLeft(yScale));
-
-            Object.keys(data1[0]).map(function (value) {
+                .call(d3.axisLeft(yScale).ticks(5));
+            svg.append("text")
+                .attr("text-anchor","end")
+                .attr("transform","rotate(+360)")
+                .attr("y",-4)
+                .attr("x",30)
+                .text("number");
+            svg.append("text")
+                .attr("text-anchor","end")
+                .attr("x",width+8)
+                .attr("y",height+margin.top)
+                .text("hour");
+            Object.keys(data1[0]).map(function (value,i) {
                 let line = d3.line()
                     .x( function(d,i){
                             return xScale(i)
@@ -65,21 +71,22 @@ class MultiLineChart extends Component {
                         return line(d) ;
                     })
                     .attr("fill","none")
-                    .attr("stroke","steelblue");
+                    .attr("stroke",d3.schemePastel1[i])
+                    .attr("stroke-width",3);
                 for(let k = 0; k<data1.length;k++){
-                    let g_dot = svg.append("g");
+                    let g_dot = svg.append("g").attr("class","g_dot");
                     let dot = g_dot.append("circle")
                         .datum(data1)
                         .attr("class","dot")
                         .attr("stroke","black")
-                        .attr("fill","black")
-                        .attr("r",1)
+                        .attr("fill","white")
+                        .attr("r",3)
                         .attr("cx",()=>xScale(k))
                         .attr("cy",function(d){
                            return  yScale(d[k][value.toString()])
                         });
                     dot.on("mouseenter",function () {
-                        console.log("g")
+                        // console.log("g")
                        //TODO: if there alredy text is should judge
                        g_dot.append("text")
                            .style("font","10px sans-serif")
@@ -98,6 +105,7 @@ class MultiLineChart extends Component {
                     })
                 }
                 svg.call(hover,lines)
+               return 0;
             });
             function hover(svg,path) {
                 if ("ontouchstart" in document)path
@@ -110,37 +118,24 @@ class MultiLineChart extends Component {
                     .on("mouseenter", entered)
                     .on("mouseleave", left);
 
-                const dot = svg.append("g")
-                    .attr("display","none")
-                    .attr("transform","translate(0,0)")
-                dot.append("circle")
-                    .attr("r",2)
-                    .attr("cx",5)
-                    .attr("cy",10)
-                    .attr("stroke","black")
-                    .attr("stroke-width",1)
-                    .attr("fill","none");
-                dot.append("text")
-                    .style("font","10px sans-serif")
-                    .attr("text-anchor","middle")
-                    .attr("x",0)
-                    .attr("y",0);
-
-                function moved() {
-                   d3.event.preventDefault();
-
-                   dot.attr("transform",function (d,i) {
-                      // console.log(d3.mouse(this),d3.event.pageY)
-                       console.log("move",(d3.mouse(this)[0]));
-                       return `translate(${d3.mouse(this)[0]},4)`
-                   });
-                   dot.select("text").text("name");
-                }
+                const dot = svg.selectAll(".g_dot")
+                    .selectAll("circle");
+                    // .attr("display","none");
+                // function moved() {
+                //    d3.event.preventDefault();
+                //
+                //    dot.attr("transform",function (d,i) {
+                //       // console.log(d3.mouse(this),d3.event.pageY)
+                //       //  console.log("move",(d3.mouse(this)[0]));
+                //        return `translate(${d3.mouse(this)[0]},4)`
+                //    });
+                //    dot.select("text").text("name");
+                // }
                 function entered() {
                     dot.attr("transform",function (d,i) {
                         // console.log(d3.mouse(this),d3.event.pageY)
-                        console.log(this)
-                        console.log("enter",(d3.mouse(this)[0]));
+                        // console.log(this)
+                        // console.log("enter",(d3.mouse(this)[0]));
                         return `translate(${d3.mouse(this)[0]},${d3.mouse(this)[1]})`
                     });
                     dot.select("circle")
@@ -167,6 +162,10 @@ class MultiLineChart extends Component {
         }
     }
     redraw(){
+        //TODO: this chould only use for single rectangle
+        let height = 250;
+        let width = 880;
+        let margin = ({top: 20, right: 20, bottom: 20, left: 55});
         let recs = Object.values(global.selectGroups._layers);
         let p2 = recs[0]._latlngs[0][1];
         let p4 = recs[0]._latlngs[0][3];
@@ -178,11 +177,9 @@ class MultiLineChart extends Component {
         Promise.all(
             [axios.get(global.server + '/vis1/od_total', {params})]
         ).then(([data])=>{
-            console.log(data);
             let data1 = data["data"]["data"];
-            let height = 150;
-            let width = 420;
             let svg = d3.select(this.mlc.current);
+            //remove the dot first
             svg.selectAll(".dot").remove();
             let xScale = d3.scaleLinear()
                 .domain([0,23])
@@ -193,16 +190,15 @@ class MultiLineChart extends Component {
             svg.selectAll("g.x.axis")
                 .call(d3.axisBottom(xScale));
             svg.selectAll("g.y.axis")
-                .call(d3.axisLeft(yScale));
+                .call(d3.axisLeft(yScale).ticks(5));
 
             let line = d3.line()
                 .x( function(d,i){
-                    console.log("x",xScale(i))
+                    // console.log("x",xScale(i))
                         return xScale(i)
                     }
                 )
                 .y(function (d,i) {
-                    console.log("y",yScale(d))
                     return yScale(d)
                 });
             svg.select("g")
@@ -214,13 +210,11 @@ class MultiLineChart extends Component {
                         .attr("stroke","steelblue")
                         .attr("fill","none")
                         .attr("d",function (d) {
-                            console.log(d);
                             return line(d)
                         }),
                     update=>update
                         .attr("stroke","purple")
                         .attr("d",function (d) {
-                            console.log(d);
                            return line(d)
                         })
                         .on("mouseover", function (d,i) {
@@ -236,8 +230,52 @@ class MultiLineChart extends Component {
                         .call(exit=>exit.transition()
                             .duration(750)
                             .remove())
-                )
+                );
 
+
+                svg.selectAll(".g_dot").remove();
+                let newg_dot = svg.append("g").attr("class","g_dot").attr("transform","translate("+margin.left+","+margin.right+")");
+                let dot = newg_dot.selectAll("g")
+                    .data(data1[0])
+                    .join(
+                        enter=>enter.append("circle")
+                            .attr("class","enter")
+                            .attr("stroke","black")
+                            .attr("fill","white")
+                            .attr("r",3)
+                            .attr("cx",(d,i)=>xScale(i))
+                            .attr("cy",function(d,i){
+                                return  yScale(d)
+                            }),
+                        update=>update
+                            .attr("r",3)
+                            .attr("cx",(d,i)=>xScale(i))
+                            .attr("cy",function(d){
+                                return  yScale(d)
+                            }),
+                        exit=>exit.attr("stroke","LightGrey")
+                            .call(exit=>exit.transition()
+                                .duration(200)
+                                .remove())
+                    );
+                dot.on("mouseenter",function () {
+                    // console.log("g")
+                    //TODO: if there alredy text is should judge
+                    newg_dot.append("text")
+                        .style("font","10px sans-serif")
+                        .attr("text-anchor","middle")
+                        .attr("fill","black")
+                        .attr("display",null)
+                        .attr("x",d3.mouse(this)[0]+4)
+                        .attr("y",d3.mouse(this)[1]-4)
+                        .text(function(d){
+                            return  yScale.invert(d3.mouse(this)[1])
+                        })
+                });
+                dot.on("mouseleave",function () {
+                    newg_dot.selectAll("text")
+                        .attr("display","none")
+                })
         })
     }
 

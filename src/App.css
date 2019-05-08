@@ -1,11 +1,18 @@
 #map{
   padding: 0;
   margin: 0;
-  width:70rem;
+  width:94rem;
   padding-left:2rem;
-  height:520px;
+  height:670px;
 }
 /*.leaflet-container{*/
   /*width:70rem;*/
   /*height:520px*/
 /*}*/
+.leaflet-tile { border:  LightGrey 0.5px dashed; }
+table{
+  text-align:center
+}
+td{
+  text-align:left
+}

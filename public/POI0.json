@@ -1,1 +1,138 @@
-{"name": "POI", "children": [{"name": "Art_Entertainment", "children": [{"name": "museum", "size": 0.21323529411764705}, {"name": "artGallery", "size": 0.18565400843881857}, {"name": "cathedra", "size": 0.13414634146341464}]}, {"name": "College_University", "children": [{"name": "college", "size": 0.15845070422535212}]}, {"name": "Food", "children": [{"name": "ChineseRestaurant", "size": 0.12547508720778883}, {"name": "foreignRestaurant", "size": 0.10404624277456648}]}, {"name": "Professional_OtherPlaces", "children": [{"name": "professional", "size": 0.09793290410030499}, {"name": "hotel", "size": 0.13119533527696792}]}, {"name": "NightlifeSpots", "children": [{"name": "bar", "size": 0.0912106135986733}, {"name": "theater", "size": 0.13432835820895522}, {"name": "KTV", "size": 0.11452513966480447}, {"name": "danceHall", "size": 0.038461538461538464}, {"name": "internetCafe", "size": 0.12332112332112333}]}, {"name": "Residence", "children": [{"name": "residence", "size": 0.10687454103824211}]}, {"name": "Sports_Recreation", "children": [{"name": "gym", "size": 0.1044776119402985}, {"name": "scenic", "size": 0.2163846838824577}]}, {"name": "shop_Service", "children": [{"name": "shoppingMall", "size": 0.16355140186915887}, {"name": "mall", "size": 0.036458333333333336}, {"name": "electronicProducts", "size": 0.125}, {"name": "hospital", "size": 0.08806029353431179}]}, {"name": "Travel_Transport", "children": [{"name": "entrance", "size": 0.11490125673249552}, {"name": "station", "size": 0.0625}]}]}
+{
+  "name": "POI",
+  "children": [
+    {
+      "name": "Art_Entertainment",
+      "children": [
+        {
+          "name": "museum",
+          "size": 0.21323529411764705
+        },
+        {
+          "name": "artGallery",
+          "size": 0.18565400843881857
+        },
+        {
+          "name": "cathedra",
+          "size": 0.13414634146341464
+        }
+      ]
+    },
+    {
+      "name": "College_University",
+      "children": [
+        {
+          "name": "college",
+          "size": 0.15845070422535212
+        }
+      ]
+    },
+    {
+      "name": "Food",
+      "children": [
+        {
+          "name": "ChineseRestaurant",
+          "size": 0.12547508720778883
+        },
+        {
+          "name": "foreignRestaurant",
+          "size": 0.10404624277456648
+        }
+      ]
+    },
+    {
+      "name": "Professional_OtherPlaces",
+      "children": [
+        {
+          "name": "professional",
+          "size": 0.09793290410030499
+        },
+        {
+          "name": "hotel",
+          "size": 0.13119533527696792
+        }
+      ]
+    },
+    {
+      "name": "NightlifeSpots",
+      "children": [
+        {
+          "name": "bar",
+          "size": 0.0912106135986733
+        },
+        {
+          "name": "theater",
+          "size": 0.13432835820895522
+        },
+        {
+          "name": "KTV",
+          "size": 0.11452513966480447
+        },
+        {
+          "name": "danceHall",
+          "size": 0.038461538461538464
+        },
+        {
+          "name": "internetCafe",
+          "size": 0.12332112332112333
+        }
+      ]
+    },
+    {
+      "name": "Residence",
+      "children": [
+        {
+          "name": "residence",
+          "size": 0.10687454103824211
+        }
+      ]
+    },
+    {
+      "name": "Sports_Recreation",
+      "children": [
+        {
+          "name": "gym",
+          "size": 0.1044776119402985
+        },
+        {
+          "name": "scenic",
+          "size": 0.2163846838824577
+        }
+      ]
+    },
+    {
+      "name": "shop_Service",
+      "children": [
+        {
+          "name": "shoppingMall",
+          "size": 0.16355140186915887
+        },
+        {
+          "name": "mall",
+          "size": 0.036458333333333336
+        },
+        {
+          "name": "electronicProducts",
+          "size": 0.125
+        },
+        {
+          "name": "hospital",
+          "size": 0.08806029353431179
+        }
+      ]
+    },
+    {
+      "name": "Travel_Transport",
+      "children": [
+        {
+          "name": "entrance",
+          "size": 0.11490125673249552
+        },
+        {
+          "name": "station",
+          "size": 0.0625
+        }
+      ]
+    }
+  ]
+}
