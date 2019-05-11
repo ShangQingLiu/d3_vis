@@ -11,7 +11,7 @@ class MultiLineChart extends Component {
 
     componentDidMount() {
         let height = 250;
-        let width = 880;
+        let width = 540;
         let margin = ({top: 20, right: 20, bottom: 20, left: 55});
         let param={
             day:[1,2]
@@ -52,7 +52,7 @@ class MultiLineChart extends Component {
                 .text("number");
             svg.append("text")
                 .attr("text-anchor","end")
-                .attr("x",width+8)
+                .attr("x",width+18)
                 .attr("y",height+margin.top)
                 .text("hour");
             Object.keys(data1[0]).map(function (value,i) {
@@ -158,7 +158,7 @@ class MultiLineChart extends Component {
 
     componentWillUpdate(nextProps){
         if(nextProps.redraw !== this.props.redraw){
-            this.redraw()
+            this.redraw();
         }
     }
     redraw(){
@@ -275,8 +275,9 @@ class MultiLineChart extends Component {
                 dot.on("mouseleave",function () {
                     newg_dot.selectAll("text")
                         .attr("display","none")
-                })
-        })
+                });
+            this.props.passLineData(data1[0]);
+        });
     }
 
     render() {

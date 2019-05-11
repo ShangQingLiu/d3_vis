@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import MapContainer from './component/MapContainer'
+import 'bootstrap/dist/css/bootstrap.css'
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faPalette,faUniversity,faUtensils,faMapMarkedAlt,faMoon,faHome,faFootballBall,
 faShoppingCart,faRoute} from '@fortawesome/free-solid-svg-icons'

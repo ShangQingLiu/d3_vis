@@ -11,7 +11,8 @@ class RowChart extends Component {
     }
 
     state={
-        xScale:{}
+        xScale:{},
+        donePassPOI:false,
     };
     componentDidMount() {
         this.initTable();
@@ -19,28 +20,31 @@ class RowChart extends Component {
 
     componentWillUpdate(nextProps){
         if(nextProps.redraw !== this.props.redraw){
-            this.redrawTable()
+                this.redrawTable()
         }
+
     }
     initTable() {
+        let cWidth = 70;
         Promise.all([d3.json('POI1.json'), d3.json('POI2.json'), d3.json('POI3.json'), d3.json('POI4.json'), d3.json('POI0.json')
         ]).then((inputData) => {
             var myrootDom = d3.select(this.rc0.current);
             var mysvg = myrootDom.append("svg")
-                .attr("width", 958)
-                .attr("height", 300);
+                .attr("width", 1400)
+                .attr("height", 310);
             let foreignObject = mysvg.append("foreignObject")
-                .attr("width", 958)
-                .attr("height", 300);
+                .attr("width", 1400)
+                .attr("height", 310);
             let table = foreignObject.append("xhtml:body")
                 .append("table")
                 .attr("text-align","center")
                 .attr('style','font-size:0.5rem')
                 // .attr("cellpadding","10")
                 .attr('bordercolor',"#ffffff")
-                .attr("border", "5");
+                .attr("border", "5")
             //POI symbol map
-            let poimap = new Map();
+            global.poimap = new Map();
+            let poimap = global.poimap;
             poimap.set("0", 'art-en.svg');
             poimap.set("1", 'collage-university.svg');
             poimap.set("2", 'food.svg');
@@ -53,21 +57,23 @@ class RowChart extends Component {
             let tr1 = table.append("tr");
             tr1.append("th")
                 .attr("bgcolor", "LightGrey");
+            //poi row
             for (let i = 0; i < 9; i++) {
-                 let th = tr1.append("th")
-                    .attr("width", 90)
+                let th = tr1.append("th")
+                    .attr("width", cWidth)
                     .attr("height", 90)
                     .attr("bgcolor", "LightGrey");
 
-                    th.append("embed")
+                th.append("embed")
                     .attr("src", function () {
                         return poimap.get(i.toString())
                     })
                     .attr("display", "block")
                     .attr("width", 30)
                     .attr("height", 30);
-                    th.append("p")
-                    .text(POIMap[i])
+                th.append("p")
+                    .text(POIMap[i].replace(/_/g," "))
+                    .attr("font-size",2)
 
 
             }
@@ -110,34 +116,73 @@ class RowChart extends Component {
                     .descendants();
                 //x-scale
                 let xScale = d3.scaleLinear()
-                    .range([0, 80]);
+                    .range([0, 40]);
                 xScale.domain([0, d3.extent(node.children.map(function (child) {
                     return child.value;
                 }))[1]]).nice();
                 let tr2 = table.append("tr");
                 for (let j = 0; j < 10; j++) {
                     if (j === 0) {
-                        tr2.append("td")
-                            .text("P" + (i + 1).toString())
-                            .attr("width", 90)
+                        let td = tr2.append("td")
+                            .attr("width", 68)
                             .attr("height", 40)
+                            .attr("vertical-align","bottom")
+                        td .append("svg")
+                            .attr("width", 10)
+                            .attr("height", 10)
+                            .attr("float","left")
+                            .append("rect")
+                            .attr("width", 10)
+                            .attr("height", 10)
+                            .attr("fill", d3.schemeSet1[i]);
+                            td.append("span")
+                            .text("Function" + (i + 1).toString())
+                            .attr("width", "40px")
+                            .attr("font-size", "10px")
+                            .attr("style","color:black,width:40px,height:40px")
+                                .attr("float","left")
                     }
                     else {
                         tr2.append("td")
                             .attr("text-align","left")
                             .append("svg")
-                            .attr("width", 90)
+                            .attr("width", 40)
                             .attr("height", 35)
                             .append("rect")
                             .attr("class","poiRect"+i.toString())
                             .attr("width", xScale(node.children[j - 1].value))
                             .attr("height", 40)
-                            .attr("fill", d3.schemePastel1[i])
+                            .attr("fill", d3.schemeSet1[i])
                     }
                     if (i % 2 !== 0) {
                         tr2.attr("bgcolor", "LightGrey");
                     }
                 }
+                //create inside funciton
+                // for (let j = 0; j < 10; j++) {
+                //     if (j === 0) {
+                //         tr2.append("td")
+                //             .text("Function" + (i + 1).toString())
+                //             .attr("width", 40)
+                //             .attr("height", 40)
+                //             .attr("style","color:"+d3.schemeSet1[i])
+                //     }
+                //     else {
+                //         tr2.append("td")
+                //             .attr("text-align","left")
+                //             .append("svg")
+                //             .attr("width", 40)
+                //             .attr("height", 35)
+                //             .append("rect")
+                //             .attr("class","poiRect"+i.toString())
+                //             .attr("width", xScale(node.children[j - 1].value))
+                //             .attr("height", 40)
+                //             .attr("fill", d3.schemePastel1[i])
+                //     }
+                //     if (i % 2 !== 0) {
+                //         tr2.attr("bgcolor", "LightGrey");
+                //     }
+                // }
             }
             let dataSize = inputData.length;
             for (let ite = 0; ite < dataSize; ite++) {
@@ -277,29 +322,46 @@ class RowChart extends Component {
             bound2: rb,
              ty:ty
         };
+        let poisorted;
         Promise.all([
             axios.get(global.server + '/vis1/poi_total', {params})
         ]).then(([comedata]) => {
-           console.log("data",comedata);
            let data = comedata["data"]["data"];
            //choose all poi rect
-            for(let i=0;i<5;i++){
+            //TODO:i orginal = 5
+            // for(let i=0;i<1;i++){
+            let i=0;
                 let useData = [];
+                //use to get top3 POI
+                let getPOIAr = {};
                 for(let j=0;j<9;j++){
                     if(Object.keys(data[i]).length !== 0){
                         useData.push(data[i][POIMap[j]]);
+                        getPOIAr[POIMap[j]] = data[i][POIMap[j]];
                     }
                 }
+                 poisorted = Object.keys(getPOIAr).sort(function (a,b) {
+                  return getPOIAr[b]-getPOIAr[a]
+                });
+
                 let xScale = d3.scaleLinear()
                     .range([0, 80]);
                 xScale.domain(d3.extent(useData));
-                console.log("useData",useData)
                 d3.selectAll(".poiRect"+ i.toString())
                     .data(useData)
                     .attr("width",(d)=>xScale(d));
-            }
+            // }
 
-        })
+        }).then(()=>{
+            let m = [];
+            for(let i =0;i<3;i++){
+                m.push(poisorted[i]+".svg")
+            }
+            this.props.passTop3POI(m);
+            this.setState(state=>({
+                donePassPOI:!state.donePassPOI
+            }));
+        });
     }
 
 
