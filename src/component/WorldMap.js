@@ -27,6 +27,9 @@ class WorldMap extends Component {
     }
 
     componentDidMount() {
+
+
+
         this.cleanLayerPoint();
         global.map = L.map('map', {zoomControl: false, attributeControl: false}).setView([30.27, 120.2], 11);
         global.selectGroups = new L.layerGroup();
@@ -35,12 +38,14 @@ class WorldMap extends Component {
             // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         }).addTo(global.map);
         global.map.on('zoomend',()=>{
-            this.drawGrid(global.map)
+                this.drawGrid(global.map)
             }
         );
         this.drawGrid(global.map);
 
     }
+
+
 
     cleanLayerPoint=()=>{
         let params={
@@ -75,7 +80,6 @@ class WorldMap extends Component {
             let type = [data.P0, data.P1, data.P2, data.P3, data.P4];
             let key = ['P0', 'P1', 'P2', 'P3', 'P4'];
 
-            //TODO:remove flag
             // let flag=true;
             //draw square by LLY
             if (Object.keys(global.innerCircleGroups).length !== 0) {
@@ -94,7 +98,7 @@ class WorldMap extends Component {
                     let color = colorScale(key[ii]);
                     let incolorScale = d3.scaleOrdinal()
                         .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
-                        .range([d3.schemeSet1[0], d3.schemeSet1[1], d3.schemeSet1[2], d3.schemeSet1[3], "#f5b400"]);
+                        .range([d3.schemeCategory10[0], d3.schemeCategory10[1], d3.schemeCategory10[2], d3.schemeCategory10[3], "#f5b400"]);
                     let incolor = incolorScale(key[ii]);
                     let o1color = ['#62A7D1', '#AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294'];
                     let o2color = ['#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7'];
@@ -350,11 +354,14 @@ class WorldMap extends Component {
             showCheckDetailView:false
         });
         let params={
-          detailView: global.detailView
+            detailView: global.detailView
         };
-        axios.post(global.server + '/vis1/detailViewNum/', params);
-        this.props.sendDetailViewMessage();
-        global.detailView = [];
+        Promise.all([
+            axios.post(global.server + '/vis1/detailViewNum/', params)
+        ]).then(()=>{
+            this.props.sendDetailViewMessage();
+            global.detailView = [];
+        });
     };
 
     render() {

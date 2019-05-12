@@ -137,7 +137,7 @@ class WorldMap extends Component {
                             let color = colorScale(key[ii]);
                             let incolorScale = d3.scaleOrdinal()
                                 .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
-                                .range([d3.schemeSet1[0], d3.schemeSet1[1],d3.schemeSet1[2],d3.schemeSet1[3],"#f5b400"]);
+                                .range([d3.schemeCategory10[0], d3.schemeCategory10[1],d3.schemeCategory10[2],d3.schemeCategory10[3],"#f5b400"]);
                             let incolor = incolorScale(key[ii]);
                             let o1color = ['#62A7D1','#AF89C7','#F2A444','#818C94','#DB6F53','#67C294'];
                             let o2color = ['#F2A444','#818C94','#DB6F53','#67C294','#62A7D1','#AF89C7'];

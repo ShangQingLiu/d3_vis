@@ -15,7 +15,7 @@ class DetailView extends Component {
         this.draw(2)
     }
 
-    draw=(index)=>{
+    draw=(centerColorIndex,arcData1,arcData2,POIData)=>{
         let width =280;
         let height = 300;
         let svg = d3.select(this.glyph.current)
@@ -70,7 +70,7 @@ class DetailView extends Component {
             .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
         svg.append("circle")
             .attr("stroke","LightGrey")
-            .attr("fill",d3.schemeSet1[1])
+            .attr("fill",d3.schemeCategory10[1])
             .attr("r",height/10)
             .attr("cx",width/2)
             .attr("cy",height/2)
@@ -107,8 +107,45 @@ class DetailView extends Component {
     componentWillUpdate(prevProps){
         if(prevProps.getDetailViewMessage!==this.props.getDetailViewMessage){
             Promise.all([
-                axios.get(global.server + '/vis1/detailViewNum')
-            ]).then(([data])=>{
+                axios.get(global.server + '/vis1/detailViewNum'),d3.json("./RP.json")
+            ]).then(([pre_asterData,data])=>{
+                let asterData = pre_asterData["data"]["data"][0];
+                console.log(asterData);
+                console.log(data);
+                for (let i = 0; i<Object.keys(asterData).length;i++){
+                    //centerColorIndex
+                    let centerColorIndex = -1;
+                    if(Object.keys(asterData)[i] in data["P0"]){
+                       centerColorIndex=0;
+                    }
+                    else if(Object.keys(asterData)[i] in data["P1"]){
+                        centerColorIndex=1;
+                    }
+                    else if(Object.keys(asterData)[i] in data["P2"]){
+                        centerColorIndex=2;
+                    }
+                    else if(Object.keys(asterData)[i] in data["P3"]){
+                        centerColorIndex=3;
+                    }
+                    else if(Object.keys(asterData)[i] in data["P4"]){
+                        centerColorIndex=4;
+                    }
+                    //arcData1
+                    let arcData1 = [];
+                    let arcData2 = [];
+                    for(let j = 0;j<24;j++){
+                        arcData1.push(asterData[Object.keys(asterData)[j]][1])//in
+                        arcData2.push(asterData[Object.keys(asterData)[j]][2])//out
+                    }
+
+                    //POIData
+
+
+
+                }
+
+
+                // draw=(centerColorIndex,arcData1,arcData2,POIData)=>{
 
             })
 

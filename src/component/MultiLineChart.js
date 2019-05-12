@@ -71,14 +71,14 @@ class MultiLineChart extends Component {
                         return line(d) ;
                     })
                     .attr("fill","none")
-                    .attr("stroke",d3.schemePastel1[i])
-                    .attr("stroke-width",3);
+                    .attr("stroke",d3.schemeCategory10[i])
+                    .attr("stroke-width",5);
                 for(let k = 0; k<data1.length;k++){
                     let g_dot = svg.append("g").attr("class","g_dot");
                     let dot = g_dot.append("circle")
                         .datum(data1)
                         .attr("class","dot")
-                        .attr("stroke","black")
+                        .attr("stroke",d3.schemeCategory10[i])
                         .attr("fill","white")
                         .attr("r",3)
                         .attr("cx",()=>xScale(k))
@@ -164,7 +164,7 @@ class MultiLineChart extends Component {
     redraw(){
         //TODO: this chould only use for single rectangle
         let height = 250;
-        let width = 880;
+        let width = 540;
         let margin = ({top: 20, right: 20, bottom: 20, left: 55});
         let recs = Object.values(global.selectGroups._layers);
         let p2 = recs[0]._latlngs[0][1];

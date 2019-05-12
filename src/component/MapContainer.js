@@ -7,7 +7,10 @@ import {global, POIMap, POIColorArray} from "../constants/constant";
 import Card from "react-bootstrap/Card"
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
+import Button from 'react-bootstrap/Button'
 //custom component
+import POIHeatMap from "../component/POIHeatMap"
+import POIChooseDialog from "../component/POIChooseDialog"
 import MultiLineChart from "../component/MultiLineChart"
 import RowChart from "../component/RowChart"
 import DetaiView from "../component/DetailView"
@@ -24,12 +27,13 @@ import {SingleDatePicker} from 'react-dates';
 //awesome icon
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faSave, faAngleDoubleLeft, faAngleDoubleRight} from '@fortawesome/free-solid-svg-icons'
+import {faSave, faAngleDoubleLeft, faAngleDoubleRight, faArrowAltCircleLeft} from '@fortawesome/free-solid-svg-icons'
 import DetailView from "./DetailView";
 
 library.add(faSave);
 library.add(faAngleDoubleLeft);
 library.add(faAngleDoubleRight);
+library.add(faArrowAltCircleLeft);
 
 class MapContainer extends Component {
     constructor(props) {
@@ -49,6 +53,10 @@ class MapContainer extends Component {
             date: null,
             focused: null,
             getDetailViewMessage: false,
+            POIChooseClose:false,
+            POIChooseIndex:'',
+            POIChooseDialog2POIHeatMapMsg:'',
+            HeatMapMode:false,
         };
     }
 
@@ -417,7 +425,7 @@ class MapContainer extends Component {
                     let color = colorScale(key[ii]);
                     let incolorScale = d3.scaleOrdinal()
                         .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
-                        .range([d3.schemeSet1[0], d3.schemeSet1[1], d3.schemeSet1[2], d3.schemeSet1[3], "#f5b400"]);
+                        .range([d3.schemeCategory10[0], d3.schemeCategory10[1], d3.schemeCategory10[2], d3.schemeCategory10[3], "#f5b400"]);
                     let incolor = incolorScale(key[ii]);
                     let o1color = ['#62A7D1', '#AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294'];
                     let o2color = ['#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7'];
@@ -598,49 +606,69 @@ class MapContainer extends Component {
     }
 
     worldMap2DetailView = () => {
-        this.setState({
-            getDetailViewMessage: true
-        })
-
+        this.setState((state)=>(
+            {
+                getDetailViewMessage:!state.getDetailViewMessage
+            } ) )
     };
 
-    POIOption=(type)=>{
-        if(type==="heatmap"){
 
-        }
-        else if(type==="funciton area"){
+    //Choose POI List insite heatmap of POI list
+    handlePOIChooseClose=(chooseIndex)=>{
+       this.setState({
+           POIChooseClose:false,
+           POIChooseIndex:chooseIndex,
+           HeatMapMode:true,
+       })
+    };
+    handlePOIChooseOpen=()=>{
+        this.setState({
+            POIChooseClose:true
+        })
+    };
 
-        }
-        console.log("test")
+    POIChooseDialog2POIHeatMap=(msg)=>{
+        console.log('msg',msg)
+        this.setState({
+            POIChooseDialog2POIHeatMapMsg:msg
+        })
+    };
+
+    closeHeatMapMode = ()=>{
+
+        this.setState({
+            HeatMapMode:false,
+        })
     };
 
     render() {
         const {date, format, mode, inputFormat} = this.state;
-        let poiHistory = Object.keys(global.history).length === 0 ? global.history.map((item, index) => (
-            //calculate the new history
-            <Card style={{float: "left", width: '9.8rem', height: '167px'}}>
-                <div id={"hmap" + index.toString()} style={{height: 150, width: 156}}></div>
-                <div style={{float: "left"}}>
-                    {item["top3POI"].map(function (name) {
-                        return <embed src={name} style={{width: 15, height: 15}}></embed>
-                    })
-                    }
-                    //TODO:change color with line number
-                    <div className="gradient-line" style={{
-                        width: 100, height: 15, border: "1px solid", borderColor: "LightGrey", float: "right"
-                        , marginTop: 3,
-                    }}></div>
-                </div>
-            </Card>
-        )) : <div></div>;
+        //TODO:finish POIhistory
+        // let poiHistory = Object.keys(global.history).length === 0 ? global.history.map((item, index) => (
+        //     //calculate the new history
+        //     <Card style={{float: "left", width: '9.8rem', height: '167px'}}>
+        //         <div id={"hmap" + index.toString()} style={{height: 150, width: 156}}></div>
+        //         <div style={{float: "left"}}>
+        //             {item["top3POI"].map(function (name) {
+        //                 return <embed src={name} style={{width: 15, height: 15}}></embed>
+        //             })
+        //             }
+        //             //TODO:change color with line number
+        //             <div className="gradient-line" style={{
+        //                 width: 100, height: 15, border: "1px solid", borderColor: "LightGrey", float: "right"
+        //                 , marginTop: 3,
+        //             }}></div>
+        //         </div>
+        //     </Card>
+        // )) : <div></div>;
 
 
-        function historyDraw(saveCount) {
-            global.history[saveCount]["map"] = L.map('hmap' + saveCount.toString()).setView([30.27, 120.2], 8);
-            L.tileLayer('https://api.mapbox.com/styles/v1/osmallfrogo/cjumipd087qvo1ftqrkq7hcxb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoib3NtYWxsZnJvZ28iLCJhIjoiY2p0em5pNnZ3MzZjMTRlbXVyOTNyYjJ5aiJ9.rUrqX8nYoZXe0mxMowBLyQ', {
-                // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            }).addTo(global.history[saveCount]["map"]);
-        }
+        // function historyDraw(saveCount) {
+        //     global.history[saveCount]["map"] = L.map('hmap' + saveCount.toString()).setView([30.27, 120.2], 8);
+        //     L.tileLayer('https://api.mapbox.com/styles/v1/osmallfrogo/cjumipd087qvo1ftqrkq7hcxb/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoib3NtYWxsZnJvZ28iLCJhIjoiY2p0em5pNnZ3MzZjMTRlbXVyOTNyYjJ5aiJ9.rUrqX8nYoZXe0mxMowBLyQ', {
+        //         // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        //     }).addTo(global.history[saveCount]["map"]);
+        // }
 
         const poimap = ['art-en.svg', 'collage-university.svg', 'food.svg', 'nightlife.svg', 'outdoor.svg', 'professional.svg', 'residence.svg', 'shop.svg', 'travel.svg'];
         const POIMap = ["Art_Entertainment",
@@ -661,15 +689,15 @@ class MapContainer extends Component {
             <div>
                 <div style={{float: "left"}}>
                     <Card style={{width: '15.5rem', height: '44.8rem'}}>
-                        <Card.Header as="h6" style={{height: "40px"}}>Data Overview</Card.Header>
+                        <Card.Header as="h6" style={{height: "44px"}}>Data Overview</Card.Header>
                         <div className="sigma-content">
                             <div className="sigma-middle-line">
                                 <span className="sigma-line-text">Data Set</span>
                             </div>
                         </div>
-                        <div align="middle">
-                            <select className="browser-default selectClass">
-                                <option value="1">Using HangZhou POIS</option>
+                        <div align="middle" >
+                            <select style={{width:"245px",align:"center"}} className="browser-default selectClass">
+                                <option value="1"> Using HangZhou POIS      </option>
                             </select>
                         </div>
                         <div style={{marginTop: "10px"}}>
@@ -679,7 +707,7 @@ class MapContainer extends Component {
                         </div>
                         <div className="sigma-content">
                             <div className="sigma-middle-line">
-                                <span className="sigma-line-text">Choose Date</span>
+                                <span className="sigma-line-text">Date</span>
                             </div>
                         </div>
                         <SingleDatePicker
@@ -711,7 +739,7 @@ class MapContainer extends Component {
                             }
                             initialVisibleMonth={() => moment("2015-04")}
                             block={true}
-                            placeholder={"select Date ▼"}
+                            placeholder={"Select Date                                 ▼"}
                         />
                         <div className="sigma-content">
                             <div className="sigma-middle-line">
@@ -757,30 +785,39 @@ class MapContainer extends Component {
                 </div>
                 <div>
                     <Card style={{float: "left", width: '80rem', height: '716.8px', marginLeft: '1px'}}>
-                        <Card.Header as="h6" style={{height: "40px", float: "left"}}>
+                        <Card.Header as="h6" style={{height: "44px", float: "left"}}>
                             <div style={{float: "left"}}>
                                 <span style={{float:"left",marginRight:"10px"}}>Global Map View</span>
-                                <DropdownButton style={{float:"left",marginRight:"10px"}} variant="info"  size="sm" id="dropdown-basic-button" title="Heatmap">
-                                    <Dropdown.Item onClick={this.test} href="#/action-1">POI</Dropdown.Item>
+                                <DropdownButton style={{float:"left",marginRight:"10px"}} variant="light"  size="sm" id="dropdown-basic-button" title="Heatmap">
+                                    <Dropdown.Item onClick={this.handlePOIChooseOpen} href="#/action-1">POI</Dropdown.Item>
                                     <Dropdown.Item href="#/action-2">Traffic Flow</Dropdown.Item>
                                 </DropdownButton>
-                                <DropdownButton style={{float:"left"}} variant="info"  size="sm" id="dropdown-basic-button" title="Function Area">
+                                <DropdownButton style={{float:"left"}} variant="light"  size="sm" id="dropdown-basic-button" title="Function Area">
                                     <Dropdown.Item href="#/action-1">POI</Dropdown.Item>
                                     <Dropdown.Item href="#/action-2">Traffic Flow</Dropdown.Item>
                                 </DropdownButton>
-
+                                <POIChooseDialog open={this.state.POIChooseClose} close={this.handlePOIChooseClose}  toPOIHeatMap={this.POIChooseDialog2POIHeatMap}/>
                             </div>
                             {/*<FontAwesomeIcon title="to save" icon="save" border pull="right" onClick={this.handleSave}/>*/}
+                            {this.state.HeatMapMode &&
+                                <div>
+                                    {POIMap[this.state.POIChooseDialog2POIHeatMapMsg.toString()]}
+                            <FontAwesomeIcon title="Go back to Main Page" icon={faArrowAltCircleLeft} border pull="right" onClick={this.closeHeatMapMode}/>
+                                </div>
+                                    }
+
                         </Card.Header>
                         <div>
-                            <WorldMap redraw={this.state.redraw} sendDetailViewMessage={this.worldMap2DetailView}/>
+                            {!this.state.HeatMapMode && <WorldMap redraw={this.state.redraw} sendDetailViewMessage={this.worldMap2DetailView}/>}
+                            {this.state.HeatMapMode &&<POIHeatMap fromPOIChooseDialog={this.state.POIChooseDialog2POIHeatMapMsg}/>}
+
                             {/*<div id="historyLog" ref={this.historyLog} style={{width:157,height:665,float:"left"}}>*/}
                             {/*</div>*/}
                         </div>
                     </Card>
 
                     <Card style={{float: "left", width: '24rem', height: '716.8px', marginLeft: '1px'}}>
-                        <Card.Header as="h6" style={{height: "40px"}}>Snapshot Panel
+                        <Card.Header as="h6" style={{height: "44px"}}>Snapshot Panel
                         </Card.Header>
                         <Card style={{float: "left", width: '23.8rem', height: '167px'}}>
                             <div id={"hmap0"} style={{height: 168, width: '23.8rem'}}></div>
@@ -797,23 +834,23 @@ class MapContainer extends Component {
                     </Card>
                 </div>
                 <div>
-                    <Card style={{float: "left", width: '45rem', height: '350px'}}>
-                        <Card.Header as="h6" style={{height: "40px"}}>Hierarchical Bar Chart</Card.Header>
+                    <Card style={{float: "left", width: '46rem', height: '350px'}}>
+                        <Card.Header as="h6" style={{height: "44px"}}>Hierarchical Bar Chart</Card.Header>
                         <RowChart redraw={this.state.redraw} passTop3POI={this.getTop3POI}/>
                     </Card>
                     <Card style={{float: "left", width: '39rem', height: '350px'}}>
-                        <Card.Header as="h6" style={{height: "40px"}}>Multi-line Chart
-                            <button size="sm"
-                                    style={{marginRight: "5px", marginLeft: "10px"}}>All</button>
-                            <button size="sm" onClick={this.handleCleanSelection} style={{marginRight: "5px"}}>Pick-up
-                            </button>
-                            <button size="sm" onClick={this.handleCleanSelection} style={{marginRight: "2px"}}>Drop-off
-                            </button>
+                        <Card.Header as="h6" style={{height: "44px"}}>Multi-line Chart
+                            <Button variant="light" size="sm"
+                                    style={{marginRight: "5px", marginLeft: "10px"}}>All</Button>
+                            <Button variant="light" size="sm" onClick={this.handleCleanSelection} style={{marginRight: "5px"}}>Pick-up
+                            </Button>
+                            <Button variant="light" size="sm" onClick={this.handleCleanSelection} style={{marginRight: "2px"}}>Drop-off
+                            </Button>
                         </Card.Header>
                         <MultiLineChart redraw={this.state.redraw} passLineData={this.getLineData}/>
                     </Card>
-                    <Card style={{float: "left", width: '36rem', height: '350px'}}>
-                        <Card.Header as="h6" style={{height: "40px"}}>Detail View
+                    <Card style={{float: "left", width: '35rem', height: '350px'}}>
+                        <Card.Header as="h6" style={{height: "44px"}}>Detail View
                             {/*<FontAwesomeIcon title="next" icon={faAngleDoubleRight} border pull="right" />*/}
                             {/*<FontAwesomeIcon title="previous" icon={faAngleDoubleLeft} border pull="right" />*/}
                         </Card.Header>

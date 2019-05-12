@@ -20,7 +20,7 @@ class RowChart extends Component {
 
     componentWillUpdate(nextProps){
         if(nextProps.redraw !== this.props.redraw){
-                this.redrawTable()
+            this.redrawTable()
         }
 
     }
@@ -134,13 +134,13 @@ class RowChart extends Component {
                             .append("rect")
                             .attr("width", 10)
                             .attr("height", 10)
-                            .attr("fill", d3.schemeSet1[i]);
-                            td.append("span")
+                            .attr("fill", d3.schemeCategory10[i]);
+                        td.append("span")
                             .text("Function" + (i + 1).toString())
                             .attr("width", "40px")
                             .attr("font-size", "10px")
                             .attr("style","color:black,width:40px,height:40px")
-                                .attr("float","left")
+                            .attr("float","left")
                     }
                     else {
                         tr2.append("td")
@@ -152,7 +152,7 @@ class RowChart extends Component {
                             .attr("class","poiRect"+i.toString())
                             .attr("width", xScale(node.children[j - 1].value))
                             .attr("height", 40)
-                            .attr("fill", d3.schemeSet1[i])
+                            .attr("fill", d3.schemeCategory10[i])
                     }
                     if (i % 2 !== 0) {
                         tr2.attr("bgcolor", "LightGrey");
@@ -165,7 +165,7 @@ class RowChart extends Component {
                 //             .text("Function" + (i + 1).toString())
                 //             .attr("width", 40)
                 //             .attr("height", 40)
-                //             .attr("style","color:"+d3.schemeSet1[i])
+                //             .attr("style","color:"+d3.schemeCategory10[i])
                 //     }
                 //     else {
                 //         tr2.append("td")
@@ -320,36 +320,36 @@ class RowChart extends Component {
         let params = {
             bound1: lu,
             bound2: rb,
-             ty:ty
+            ty:ty
         };
         let poisorted;
         Promise.all([
             axios.get(global.server + '/vis1/poi_total', {params})
         ]).then(([comedata]) => {
-           let data = comedata["data"]["data"];
-           //choose all poi rect
+            let data = comedata["data"]["data"];
+            //choose all poi rect
             //TODO:i orginal = 5
             // for(let i=0;i<1;i++){
             let i=0;
-                let useData = [];
-                //use to get top3 POI
-                let getPOIAr = {};
-                for(let j=0;j<9;j++){
-                    if(Object.keys(data[i]).length !== 0){
-                        useData.push(data[i][POIMap[j]]);
-                        getPOIAr[POIMap[j]] = data[i][POIMap[j]];
-                    }
+            let useData = [];
+            //use to get top3 POI
+            let getPOIAr = {};
+            for(let j=0;j<9;j++){
+                if(Object.keys(data[i]).length !== 0){
+                    useData.push(data[i][POIMap[j]]);
+                    getPOIAr[POIMap[j]] = data[i][POIMap[j]];
                 }
-                 poisorted = Object.keys(getPOIAr).sort(function (a,b) {
-                  return getPOIAr[b]-getPOIAr[a]
-                });
+            }
+            poisorted = Object.keys(getPOIAr).sort(function (a,b) {
+                return getPOIAr[b]-getPOIAr[a]
+            });
 
-                let xScale = d3.scaleLinear()
-                    .range([0, 80]);
-                xScale.domain(d3.extent(useData));
-                d3.selectAll(".poiRect"+ i.toString())
-                    .data(useData)
-                    .attr("width",(d)=>xScale(d));
+            let xScale = d3.scaleLinear()
+                .range([0, 80]);
+            xScale.domain(d3.extent(useData));
+            d3.selectAll(".poiRect"+ i.toString())
+                .data(useData)
+                .attr("width",(d)=>xScale(d));
             // }
 
         }).then(()=>{

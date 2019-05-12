@@ -34,8 +34,8 @@ class Glyph extends Component {
             .data(l).enter()
             .append("path")
             .attr("class", "innerCircle")
-            .attr("fill", d => d3.schemeSet1[d])
-            .attr("stroke", d => d3.schemeSet1[d])
+            .attr("fill", d => d3.schemeCategory10[d])
+            .attr("stroke", d => d3.schemeCategory10[d])
             .attr("d", arcCircleFactory)
             .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
         let innerCircle1 = svg.append("g")

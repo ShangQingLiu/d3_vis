@@ -5,10 +5,10 @@
   padding-left:2rem;
   height:670px;
 }
-/*.leaflet-container{*/
-  /*width:94rem;*/
-  /*height:670px*/
-/*}*/
+.leaflet-container{
+  width:80rem;
+  height:670px
+}
 /*.leaflet-tile { border:  LightGrey 0.5px dashed; }*/
 table{
   text-align:center;

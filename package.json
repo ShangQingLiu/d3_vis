@@ -37,6 +37,7 @@
     "react-leaflet": "^2.2.1",
     "react-leaflet-ant-path": "^1.1.0",
     "react-leaflet-curve": "^1.0.0",
+    "react-leaflet-heatmap-layer": "^2.0.0",
     "react-scripts": "2.1.8",
     "reactstrap": "^8.0.0"
   },
@@ -54,5 +55,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/plugin-proposal-export-default-from": "^7.2.0"
+  }
 }
