@@ -77,8 +77,8 @@ class WorldMap extends Component {
             axios.get(global.server + '/vis1/poi_total', {params})
         ]).then(([data, asterData, poiData]) => {
             console.log(asterData);
-            let type = [data.P0, data.P1, data.P2, data.P3,data.P4];
-            let key = ['P0', 'P1', 'P2', 'P3','P4'];
+            let type = [data.P0, data.P1, data.P2, data.P3, data.P4];
+            let key = ['P0', 'P1', 'P2', 'P3', 'P4'];
 
             // let flag=true;
             //draw square by LLY
@@ -93,22 +93,21 @@ class WorldMap extends Component {
                     let j = parseInt(grid.slice(2, 4));
                     let bound = [[bottom + i * heightDistance, left + j * wideDistance], [bottom + (i + 1) * heightDistance, left + (j + 1) * wideDistance]];
                     let colorScale = d3.scaleOrdinal()
-                        .domain(['P0', 'P1', 'P2', 'P3','P4'])
-                        .range([d3.schemePastel1[0], d3.schemePastel1[1], d3.schemePastel1[2], d3.schemePastel1[3], d3.schemePastel1[5]]);
+                        .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
+                        .range([d3.schemePastel1[0], d3.schemePastel1[1], d3.schemePastel1[2], d3.schemePastel1[3], d3.schemePastel1[4]]);
                     let color = colorScale(key[ii]);
                     let incolorScale = d3.scaleOrdinal()
-                        .domain(['P0', 'P1', 'P2', 'P3','P4'])
-                        .range([d3.schemeCategory10[0], d3.schemeCategory10[1], d3.schemeCategory10[2], d3.schemeCategory10[3], d3.schemeCategory10[4]]);
+                        .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
+                        .range([d3.schemeCategory10[0], d3.schemeCategory10[1], d3.schemeCategory10[2], d3.schemeCategory10[3], "#f5b400"]);
                     let incolor = incolorScale(key[ii]);
                     let o1color = ['#62A7D1', '#AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294'];
                     let o2color = ['#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7'];
                     let o3color = ['AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1'];
                     let o4color = ['#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#333333'];
                     let o5color = ['#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#F2A444', '#818C94'];
-                    let o6color = ['#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#F2A444', '#818C94'];
                     let customColorScale = d3.scaleOrdinal()
-                        .domain(['P0', 'P1', 'P2', 'P3'])
-                        .range([o1color, o2color, o3color, o4color]);
+                        .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
+                        .range([o1color, o2color, o3color, o4color, o5color]);
                     let ocolor = customColorScale(key[ii]);
                     //divide grid
                     // L.rectangle(bound, {color: "white", fill:true,opacity: 1, weight: 1,stroke:true,fillColor:"white",fillOpacity:1}).addTo(global.map);
@@ -122,7 +121,7 @@ class WorldMap extends Component {
                     let flowSum = function () {
                         let sum = 0;
                         for (let g = 0; g < 24; g++) {
-                            sum += parseInt(asterData["data"]["data"][30 * i + j][g][3]/21)
+                            sum += parseInt(asterData["data"]["data"][30 * i + j][g][3])
                         }
                         return sum;
                     };
@@ -147,25 +146,20 @@ class WorldMap extends Component {
                             opacity: 0.1,
                             fill: false
                         });
-                        global.innerCircleGroup.push(c1, c2, c3);
-                        global.innerCircleGroups = L.layerGroup(global.innerCircleGroup);
+                        global.innerCircleGroup.push(c1, c2, c3)
+                        global.innerCircleGroups = L.layerGroup(global.innerCircleGroup)
                         map.addLayer(global.innerCircleGroups);
                         // }
                     }
                     else {
                         // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
-                        let fillOpacity =  flowSum()/2000+0.1;
-                        if(fillOpacity <  0)fillOpacity = 0;
-                        else if(fillOpacity>1) fillOpacity = 1;
-                        console.log(flowSum());
-                        console.log(fillOpacity);
                         let c1 = L.circle([cx, cy], {
                             radius: outR, color: incolor, opacity: 0.78, fill: true, fillOpacity:
-                            fillOpacity
+                            Math.log(Math.pow(1.00005, flowSum())) / 1.5 + 0.1
                             , stroke: false
                         });
                         global.innerCircleGroup.push(c1)
-                        global.innerCircleGroups = L.layerGroup(global.innerCircleGroup);
+                        global.innerCircleGroups = L.layerGroup(global.innerCircleGroup)
                         map.addLayer(global.innerCircleGroups);
                         // }
                     }
@@ -181,7 +175,7 @@ class WorldMap extends Component {
                             let colorA = "#D38ABD";
                             let colorB = "#8CD1E0";
                             if (asterData["data"]["data"][numGrid][myI][1] > asterData["data"]["data"][numGrid][myI][2]) {
-                                inCurve = L.curve(this.describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]/21),
+                                inCurve = L.curve(this.describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
                                     {
                                         color: ocolor[5],
                                         fill: true,
@@ -190,7 +184,7 @@ class WorldMap extends Component {
                                         fillOpacity: 1,
                                         weight: 1
                                     });
-                                outCurve = L.curve(this.describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]/21),
+                                outCurve = L.curve(this.describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]),
                                     {
                                         color: ocolor[5],
                                         fill: true,
@@ -203,7 +197,7 @@ class WorldMap extends Component {
                                 global.curveGroup.push(outCurve);
                             }
                             else {
-                                outCurve = L.curve(this.describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]/21),
+                                outCurve = L.curve(this.describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]),
                                     {
                                         color: ocolor[5],
                                         fill: true,
@@ -212,7 +206,7 @@ class WorldMap extends Component {
                                         fillOpacity: 1,
                                         weight: 1
                                     });
-                                inCurve = L.curve(this.describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]/21),
+                                inCurve = L.curve(this.describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
                                     {
                                         color: ocolor[5],
                                         fill: true,

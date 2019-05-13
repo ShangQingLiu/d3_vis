@@ -16,7 +16,8 @@ table{
     border-bottom-width:0px;
 }
 td{
-  text-align:left
+  text-align:left;
+  font-weight:bold;
 }
 
 .gradient-line1{

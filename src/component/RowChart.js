@@ -20,13 +20,13 @@ class RowChart extends Component {
 
     componentWillUpdate(nextProps){
         if(nextProps.redraw !== this.props.redraw){
-            this.redrawTable()
+            // this.redrawTable()
         }
 
     }
     initTable() {
         let cWidth = 70;
-        Promise.all([d3.json('POI1.json'), d3.json('POI2.json'), d3.json('POI3.json'), d3.json('POI4.json'), d3.json('POI0.json')
+        Promise.all([ d3.json('POI0.json'),d3.json('POI1.json'), d3.json('POI2.json'), d3.json('POI3.json'), d3.json('POI4.json')
         ]).then((inputData) => {
             var myrootDom = d3.select(this.rc0.current);
             var mysvg = myrootDom.append("svg")
@@ -61,7 +61,8 @@ class RowChart extends Component {
             for (let i = 0; i < 9; i++) {
                 let th = tr1.append("th")
                     .attr("width", cWidth)
-                    .attr("height", 90)
+                    .attr("height",60)
+                    .attr("valign","top")
                     .attr("bgcolor", "LightGrey");
 
                 th.append("embed")
@@ -73,11 +74,16 @@ class RowChart extends Component {
                     .attr("height", 30);
                 th.append("p")
                     .text(POIMap[i].replace(/_/g," "))
-                    .attr("font-size",2)
+                    .attr("font-size",1)
 
 
             }
-            for (let i = 0; i < 5; i++) {
+
+
+
+
+
+            for (let i = 0; i < inputData.length; i++) {
                 let da = inputData[i];
                 //define partition
                 var partition = d3.partition()
@@ -116,15 +122,13 @@ class RowChart extends Component {
                     .descendants();
                 //x-scale
                 let xScale = d3.scaleLinear()
-                    .range([0, 40]);
-                xScale.domain([0, d3.extent(node.children.map(function (child) {
-                    return child.value;
-                }))[1]]).nice();
+                    .range([0, 85]);
+                xScale.domain([0,2.456]);
                 let tr2 = table.append("tr");
                 for (let j = 0; j < 10; j++) {
                     if (j === 0) {
                         let td = tr2.append("td")
-                            .attr("width", 68)
+                            .attr("width", 79)
                             .attr("height", 40)
                             .attr("vertical-align","bottom")
                         td .append("svg")
@@ -134,25 +138,35 @@ class RowChart extends Component {
                             .append("rect")
                             .attr("width", 10)
                             .attr("height", 10)
-                            .attr("fill", d3.schemeCategory10[i]);
+                            .attr("fill",function () {
+                               return d3.schemeCategory10[i]
+                            } );
                         td.append("span")
-                            .text("Function" + (i + 1).toString())
+                            .text(function(){
+                             return    "Function#" + (i + 1).toString()
+                            })
                             .attr("width", "40px")
                             .attr("font-size", "10px")
                             .attr("style","color:black,width:40px,height:40px")
+                            .attr("font-weight","bold")
                             .attr("float","left")
                     }
                     else {
                         tr2.append("td")
                             .attr("text-align","left")
                             .append("svg")
-                            .attr("width", 40)
-                            .attr("height", 35)
+                            .attr("width", 85)
+                            .attr("height", 40)
                             .append("rect")
                             .attr("class","poiRect"+i.toString())
-                            .attr("width", xScale(node.children[j - 1].value))
+                            .attr("width", function () {
+                                // console.log(node.children[j - 1].value)
+                                return xScale(node.children[j - 1].value)
+                            })
                             .attr("height", 40)
-                            .attr("fill", d3.schemeCategory10[i])
+                            .attr("fill",function () {
+                                return d3.schemeCategory10[i]
+                            } );
                     }
                     if (i % 2 !== 0) {
                         tr2.attr("bgcolor", "LightGrey");

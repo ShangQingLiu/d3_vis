@@ -9,6 +9,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 import Button from 'react-bootstrap/Button'
 //custom component
+import MapHistory from "../component/MapHistory"
 import POIHeatMap from "../component/POIHeatMap"
 import POIChooseDialog from "../component/POIChooseDialog"
 import MultiLineChart from "../component/MultiLineChart"
@@ -27,13 +28,17 @@ import {SingleDatePicker} from 'react-dates';
 //awesome icon
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faSave, faAngleDoubleLeft, faAngleDoubleRight, faArrowAltCircleLeft} from '@fortawesome/free-solid-svg-icons'
+import {
+    faSave, faAngleDoubleLeft, faAngleDoubleRight, faArrowAltCircleLeft,
+    faPlus
+} from '@fortawesome/free-solid-svg-icons'
 import DetailView from "./DetailView";
 
 library.add(faSave);
 library.add(faAngleDoubleLeft);
 library.add(faAngleDoubleRight);
 library.add(faArrowAltCircleLeft);
+library.add(faPlus);
 
 class MapContainer extends Component {
     constructor(props) {
@@ -53,10 +58,12 @@ class MapContainer extends Component {
             date: null,
             focused: null,
             getDetailViewMessage: false,
-            POIChooseClose:false,
-            POIChooseIndex:'',
-            POIChooseDialog2POIHeatMapMsg:'',
-            HeatMapMode:false,
+            POIChooseClose: false,
+            POIChooseIndex: '',
+            POIChooseDialog2POIHeatMapMsg: '',
+            HeatMapMode: false,
+            recBound2DetailView: '',
+            addHistory:false,
         };
     }
 
@@ -214,8 +221,10 @@ class MapContainer extends Component {
                 global.selectGroup.push(rectangle);
                 global.selectGroups = L.layerGroup(global.selectGroup);
                 global.map.addLayer(global.selectGroups);
+                let sendBound = [rectangle._latlngs[0][1], rectangle._latlngs[0][3]];
                 this.setState(state => ({
-                    redraw: !state.redraw
+                    redraw: !state.redraw,
+                    recBound2DetailView: sendBound,
                 }));
                 //调整view范围
                 // global.map.fitBounds(latlngs);
@@ -223,6 +232,7 @@ class MapContainer extends Component {
         }
         this.setState(state => ({
             drawRectOn: !state.drawRectOn
+
         }));
     };
     handledbClick = () => {
@@ -237,84 +247,21 @@ class MapContainer extends Component {
             poiShow: !state.poiShow
         }))
     };
-
     handleSave = () => {
         // this.setState(state => ({
         //     saveCount: state.saveCount + 1
         // }))
     };
-
     getTop3POI = (m) => {
-        console.log(m);
         this.setState({
             top3POI: m
         })
     };
     getLineData = (m) => {
-        console.log(m);
         this.setState({
             lineData: m
         })
     };
-    componentDidUpdate = (prevProps, prevState) => {
-        let saveNum = this.state.saveCount - prevState.saveCount;
-        console.log(this.state.saveCount, prevState.saveCount);
-        if (saveNum !== 0) {
-            for (let i = 0; i < saveNum; i++) {
-                global.history.push({})
-            }
-            for (let i = prevState.saveCount; i < this.state.saveCount; i++) {
-                //TODO:put content inside of history
-                //top 3 of poi
-                //GET
-                //lineData
-                //GET
-                //construct history
-                global.history.push({});
-                global.history[i]["top3POI"] = this.state.top3POI;
-                global.history[i]["lineData"] = this.state.lineData;
-                let card = d3.select("#historyLog")
-                    .data(global.history)
-                    .append("div")
-                    .attr("style", "float:left;width:157px;height:167px;border:1px;borderColor:LightGrey");
-                let hmap = card.append("div")
-                    .attr("id", function (d, i) {
-                        return "hmap" + i.toString()
-                    })
-                    .attr("style", "height:150px;width:157px;")
-                for (let j = 0; j < 3; j++) {
-                    let badge = card.append("div")
-                        .append('embed')
-                        .attr('src', function () {
-                            return global.poimap[POIMap.indexOf(global.history[j]["top3POI"])]
-                        })
-                        .attr("style", "height:15px;width:15px;")
-                        .attr('src', function () {
-                            return global.poimap[POIMap.indexOf(global.history[j]["top3POI"])]
-                        })
-                }
-                let colorLine = card.append("div")
-                    .attr("class", "gradient-line")
-                    .attr("width", 100)
-                    .attr("height", 15)
-                    .attr("border", 1)
-                    .attr("borderColor", "LightGrey")
-                    .attr("float", "right")
-                    .attr('marginTop', 3);
-                this.historyDraw(i)
-            }
-        }
-    };
-
-    componentDidMount() {
-        this.historyDraw(0)
-        this.drawGrid(global.history[0]["map"], global.curveGroup0, global.curveGroups0, global.innerCircleGroup0, global.innerCircleGroups0, global.POIGroup0, global.POIGroups0)
-        this.historyDraw(1)
-        this.drawGrid(global.history[1]["map"], global.curveGroup1, global.curveGroups1, global.innerCircleGroup1, global.innerCircleGroups1, global.POIGroup1, global.POIGroups1)
-        this.historyDraw(2)
-        this.drawGrid(global.history[2]["map"], global.curveGroup2, global.curveGroups2, global.innerCircleGroup2, global.innerCircleGroups2, global.POIGroup2, global.POIGroups2)
-        this.historyDraw(3)
-    }
 
     historyDraw(saveCount) {
         let mapId = 'hmap' + saveCount.toString();
@@ -327,8 +274,7 @@ class MapContainer extends Component {
             // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         }).addTo(global.history[saveCount]["map"]);
     }
-
-    drawGrid(map, curveGroup, curveGroups, innerCircleGroup, innerCircleGroups, POIGroup, POIGroups) {
+    drawGrid(map, curveGroup, curveGroups, innerCircleGroup, innerCircleGroups, POIGroup, POIGroups,fValue) {
         function describeArc(lng, lat, innerRadius, outerRadius, startAngle, endAngle, value) {
             let innerTest = 0.0017884;
             let outerTest = 0.00400;
@@ -398,249 +344,741 @@ class MapContainer extends Component {
         let params = {
             ty: ty
         };
-        Promise.all([
-            d3.json("./RP.json"), axios.get(global.server + '/vis1/od_aster'),
-            axios.get(global.server + '/vis1/poi_total', {params})
-        ]).then(([data, asterData, poiData]) => {
-            console.log(asterData);
-            let type = [data.P0, data.P1, data.P2, data.P3, data.P4];
-            let key = ['P0', 'P1', 'P2', 'P3', 'P4'];
+        if(fValue === 0){
+            Promise.all([
+                d3.json("./RP.json"), axios.get(global.server + '/vis1/od_aster'),
+                axios.get(global.server + '/vis1/poi_total', {params})
+            ]).then(([data, asterData, poiData]) => {
+                console.log(asterData);
+                let type = [data.P0, data.P1, data.P2, data.P3, data.P4];
+                let key = ['P0', 'P1', 'P2', 'P3', 'P4'];
 
-            //TODO:remove flag
-            // let flag=true;
-            //draw square by LLY
-            if (Object.keys(innerCircleGroups).length !== 0) {
-                innerCircleGroups.clearLayers();
-                innerCircleGroup = [];
-            }
-            for (let ii = 0; ii < type.length; ii++) {
-                for (let jj = 0; jj < type[ii].length; jj++) {
-                    let grid = type[ii][jj];
-                    let i = parseInt(grid.slice(0, 2));
-                    let j = parseInt(grid.slice(2, 4));
-                    let bound = [[bottom + i * heightDistance, left + j * wideDistance], [bottom + (i + 1) * heightDistance, left + (j + 1) * wideDistance]];
-                    let colorScale = d3.scaleOrdinal()
-                        .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
-                        .range([d3.schemePastel1[0], d3.schemePastel1[1], d3.schemePastel1[2], d3.schemePastel1[3], d3.schemePastel1[4]]);
-                    let color = colorScale(key[ii]);
-                    let incolorScale = d3.scaleOrdinal()
-                        .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
-                        .range([d3.schemeCategory10[0], d3.schemeCategory10[1], d3.schemeCategory10[2], d3.schemeCategory10[3], "#f5b400"]);
-                    let incolor = incolorScale(key[ii]);
-                    let o1color = ['#62A7D1', '#AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294'];
-                    let o2color = ['#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7'];
-                    let o3color = ['AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1'];
-                    let o4color = ['#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#333333'];
-                    let o5color = ['#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#F2A444', '#818C94'];
-                    let customColorScale = d3.scaleOrdinal()
-                        .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
-                        .range([o1color, o2color, o3color, o4color, o5color]);
-                    let ocolor = customColorScale(key[ii]);
-                    //divide grid
-                    // L.rectangle(bound, {color: "white", fill:true,opacity: 1, weight: 1,stroke:true,fillColor:"white",fillOpacity:1}).addTo(global.map);
-                    // let newBound = [[bound[0][0] / 3, bound[0][1] / 3], [bound[1][0] / 3, bound[1][1] / 3]];
-                    let ir = 200;
-                    let cy = left + j * wideDistance + wideDistance / 2;
-                    let cx = bottom + i * heightDistance + heightDistance / 2;
-                    let oR = 450;
-                    let outR = 640;
-                    //inner circle
-                    let flowSum = function () {
-                        let sum = 0;
-                        for (let g = 0; g < 24; g++) {
-                            sum += parseInt(asterData["data"]["data"][30 * i + j][g][3])
-                        }
-                        return sum;
-                    };
-                    let mapLevel = map.getZoom();
-                    if (mapLevel >= 12) {
-                        // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
-                        let c1 = L.circle([cx, cy], {
-                            radius: ir, color: incolor, opacity: 0.78, fill: true, fillOpacity:
-                            Math.log(Math.pow(1.00005, flowSum())) / 1.5
-                            , stroke: false
-                        });
-                        let c2 = L.circle([cx, cy], {
-                            radius: oR,
-                            color: "#101010",
-                            opacity: 0.1,
-                            fill: false
-                        });
-                        let c3 = L.circle([cx, cy], {
-                            radius: outR,
-                            color: "#101010",
-                            opacity: 0.1,
-                            fill: false
-                        });
-                        innerCircleGroup.push(c1, c2, c3)
-                        innerCircleGroups = L.layerGroup(innerCircleGroup)
-                        map.addLayer(innerCircleGroups);
-                        // }
-                    }
-                    else {
-                        // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
-                        let c1 = L.circle([cx, cy], {
-                            radius: outR, color: incolor, opacity: 0.78, fill: true, fillOpacity:
-                            Math.log(Math.pow(1.00005, flowSum())) / 1.5
-                            , stroke: false
-                        });
-                        innerCircleGroup.push(c1)
-                        innerCircleGroups = L.layerGroup(innerCircleGroup)
-                        map.addLayer(innerCircleGroups);
-                        // }
-                    }
-                    if (mapLevel > 12) {
-                        //do 24hr arc
-                        // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
-                        let numGrid = 30 * i + j;
-                        let angs = 0;
-                        let ange = 15;
-                        let anStep = 15;
-                        for (let myI = 0; myI < 24; myI++) {
-                            let inCurve, outCurve;
-                            let colorA = "#D38ABD";
-                            let colorB = "#8CD1E0";
-                            if (asterData["data"]["data"][numGrid][myI][1] > asterData["data"]["data"][numGrid][myI][2]) {
-                                inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
-                                    {
-                                        color: ocolor[5],
-                                        fill: true,
-                                        stroke: true,
-                                        fillColor: 'g5732a8',
-                                        fillOpacity: 1,
-                                        weight: 1
-                                    });
-                                outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]),
-                                    {
-                                        color: ocolor[5],
-                                        fill: true,
-                                        stroke: true,
-                                        fillColor: '#4284f5',
-                                        fillOpacity: 1,
-                                        weight: 1
-                                    });
-                                curveGroup.push(inCurve);
-                                curveGroup.push(outCurve);
-                            }
-                            else {
-                                outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]),
-                                    {
-                                        color: ocolor[5],
-                                        fill: true,
-                                        stroke: true,
-                                        fillColor: '#4284f5',
-                                        fillOpacity: 1,
-                                        weight: 1
-                                    });
-                                inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
-                                    {
-                                        color: ocolor[5],
-                                        fill: true,
-                                        stroke: true,
-                                        fillColor: '#5732a8',
-                                        fillOpacity: 1,
-                                        weight: 1
-                                    });
-                                //     outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs+myI*anStep, ange+myI*anStep, asterData["data"]["data"][numGrid][myI][2]),
-                                //         {color: ocolor[5], fill: true,stroke:true,fillColor:'#4284f5',fillOpacity:1,weight:1});
-                                //     inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs+myI*anStep, ange+myI*anStep, asterData["data"]["data"][numGrid][myI][1]),
-                                //         {color: ocolor[5], fill: true,stroke:true,fillColor:'#5732a8',fillOpacity:1,weight:1});
-                                //
-                                curveGroup.push(outCurve);
-                                curveGroup.push(inCurve);
-                            }
-                        }
-                        curveGroups = L.layerGroup(curveGroup);
-                        map.addLayer(curveGroups);
-                        // }
-                    }
-                    else {
-                        if (Object.keys(curveGroups).length !== 0) {
-                            curveGroups.clearLayers();
-                            curveGroup = [];
-                        }
-                    }
-                    //draw poi circle 9
-                    if (mapLevel > 12) {
-                        // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
-                        for (let myI = 0; myI < 9; myI++) {
-                            let poir = 0.0057;
-                            let poiR = 20;
-                            if (poiData["data"]["data"][30 * i + j][POIMap[myI]]) {
-                                // poiR = (poiData["data"]["data"][30*i+j][POIMap[myI]]/200>100)?100:poiData["data"]["data"][30*i+j][POIMap[myI]]/150;
-                                poiR = poiData["data"]["data"][30 * i + j][POIMap[myI]] / 200 * 40 + 30;
-                                if (poiR > 80) {
-                                    poiR = 80;
-                                }
-
-                            }
-                            if (poiR > 30) {
-                                let poix = cx + poir * Math.sin(2 * Math.PI / 9 * myI) * 0.87;
-                                let poiy = cy + poir * Math.cos(2 * Math.PI / 9 * myI);
-                                let poiCircle = L.circle([poix, poiy], {
-                                    radius: poiR,
-                                    color: POIColorArray[myI],
-                                    fillOpacity: 1,
-                                    opacity: 1,
-                                    fill: true,
-                                    fillColor: POIColorArray[myI]
-                                });
-                                // L.imageOverlay(global.poimap[myI],[[poix-poiR,poiy-poiR],[poix+poiR,poiy+poiR]]);
-                                POIGroup.push(poiCircle);
-                            }
-                        }
-                        POIGroups = L.layerGroup(POIGroup);
-                        map.addLayer(POIGroups);
-                        // }
-                    }
-                    else {
-                        if (Object.keys(POIGroups).length !== 0) {
-                            POIGroups.clearLayers();
-                            POIGroup = [];
-                        }
-                    }
+                //TODO:remove flag
+                // let flag=true;
+                //draw square by LLY
+                if (Object.keys(innerCircleGroups).length !== 0) {
+                    innerCircleGroups.clearLayers();
+                    innerCircleGroup = [];
                 }
+                for (let ii = 0; ii < type.length; ii++) {
+                    for (let jj = 0; jj < type[ii].length; jj++) {
+                        let grid = type[ii][jj];
+                        let i = parseInt(grid.slice(0, 2));
+                        let j = parseInt(grid.slice(2, 4));
+                        // let bound = [[bottom + i * heightDistance, left + j * wideDistance], [bottom + (i + 1) * heightDistance, left + (j + 1) * wideDistance]];
+                        // let colorScale = d3.scaleOrdinal()
+                        //     .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
+                        //     .range([d3.schemePastel1[0], d3.schemePastel1[1], d3.schemePastel1[2], d3.schemePastel1[3], d3.schemePastel1[5]]);
+                        // let color = colorScale(key[ii]);
+                        let incolorScale = d3.scaleOrdinal()
+                            .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
+                            .range([d3.schemeCategory10[0], d3.schemeCategory10[1], d3.schemeCategory10[2], d3.schemeCategory10[3], d3.schemeCategory10[4]]);
+                        let incolor = incolorScale(key[ii]);
+                        let o1color = ['#62A7D1', '#AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294'];
+                        let o2color = ['#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7'];
+                        let o3color = ['AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1'];
+                        let o4color = ['#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#333333'];
+                        let o5color = ['#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#F2A444', '#818C94'];
+                        let customColorScale = d3.scaleOrdinal()
+                            .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
+                            .range([o1color, o2color, o3color, o4color, o5color]);
+                        let ocolor = customColorScale(key[ii]);
+                        //divide grid
+                        // L.rectangle(bound, {color: "white", fill:true,opacity: 1, weight: 1,stroke:true,fillColor:"white",fillOpacity:1}).addTo(global.map);
+                        // let newBound = [[bound[0][0] / 3, bound[0][1] / 3], [bound[1][0] / 3, bound[1][1] / 3]];
+                        let ir = 200;
+                        let cy = left + j * wideDistance + wideDistance / 2;
+                        let cx = bottom + i * heightDistance + heightDistance / 2;
+                        let oR = 450;
+                        let outR = 640;
+                        //inner circle
+                        let flowSum = function () {
+                            let sum = 0;
+                            for (let g = 0; g < 24; g++) {
+                                sum += parseInt(asterData["data"]["data"][30 * i + j][g][3])
+                            }
+                            return sum;
+                        };
+                        let mapLevel = map.getZoom();
+                        if (mapLevel >= 12) {
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            let c1 = L.circle([cx, cy], {
+                                radius: ir, color: incolor, opacity: 0.78, fill: true, fillOpacity:
+                                Math.log(Math.pow(1.00005, flowSum())) / 1.5
+                                , stroke: false
+                            });
+                            let c2 = L.circle([cx, cy], {
+                                radius: oR,
+                                color: "#101010",
+                                opacity: 0.1,
+                                fill: false
+                            });
+                            let c3 = L.circle([cx, cy], {
+                                radius: outR,
+                                color: "#101010",
+                                opacity: 0.1,
+                                fill: false
+                            });
+                            innerCircleGroup.push(c1, c2, c3)
+                            innerCircleGroups = L.layerGroup(innerCircleGroup)
+                            map.addLayer(innerCircleGroups);
+                            // }
+                        }
+                        else {
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            let c1 = L.circle([cx, cy], {
+                                radius: outR, color: incolor, opacity: 0.78, fill: true, fillOpacity:
+                                Math.log(Math.pow(1.00005, flowSum())) / 1.5
+                                , stroke: false
+                            });
+                            innerCircleGroup.push(c1)
+                            innerCircleGroups = L.layerGroup(innerCircleGroup)
+                            map.addLayer(innerCircleGroups);
+                            // }
+                        }
+                        if (mapLevel > 12) {
+                            //do 24hr arc
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            let numGrid = 30 * i + j;
+                            let angs = 0;
+                            let ange = 15;
+                            let anStep = 15;
+                            for (let myI = 0; myI < 24; myI++) {
+                                let inCurve, outCurve;
+                                let colorA = "#D38ABD";
+                                let colorB = "#8CD1E0";
+                                if (asterData["data"]["data"][numGrid][myI][1] > asterData["data"]["data"][numGrid][myI][2]) {
+                                    inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: 'g5732a8',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: '#4284f5',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    curveGroup.push(inCurve);
+                                    curveGroup.push(outCurve);
+                                }
+                                else {
+                                    outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: '#4284f5',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: '#5732a8',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    //     outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs+myI*anStep, ange+myI*anStep, asterData["data"]["data"][numGrid][myI][2]),
+                                    //         {color: ocolor[5], fill: true,stroke:true,fillColor:'#4284f5',fillOpacity:1,weight:1});
+                                    //     inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs+myI*anStep, ange+myI*anStep, asterData["data"]["data"][numGrid][myI][1]),
+                                    //         {color: ocolor[5], fill: true,stroke:true,fillColor:'#5732a8',fillOpacity:1,weight:1});
+                                    //
+                                    curveGroup.push(outCurve);
+                                    curveGroup.push(inCurve);
+                                }
+                            }
+                            curveGroups = L.layerGroup(curveGroup);
+                            map.addLayer(curveGroups);
+                            // }
+                        }
+                        else {
+                            if (Object.keys(curveGroups).length !== 0) {
+                                curveGroups.clearLayers();
+                                curveGroup = [];
+                            }
+                        }
+                        //draw poi circle 9
+                        if (mapLevel > 12) {
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            for (let myI = 0; myI < 9; myI++) {
+                                let poir = 0.0057;
+                                let poiR = 20;
+                                if (poiData["data"]["data"][30 * i + j][POIMap[myI]]) {
+                                    // poiR = (poiData["data"]["data"][30*i+j][POIMap[myI]]/200>100)?100:poiData["data"]["data"][30*i+j][POIMap[myI]]/150;
+                                    poiR = poiData["data"]["data"][30 * i + j][POIMap[myI]] / 200 * 40 + 30;
+                                    if (poiR > 80) {
+                                        poiR = 80;
+                                    }
 
+                                }
+                                if (poiR > 30) {
+                                    let poix = cx + poir * Math.sin(2 * Math.PI / 9 * myI) * 0.87;
+                                    let poiy = cy + poir * Math.cos(2 * Math.PI / 9 * myI);
+                                    let poiCircle = L.circle([poix, poiy], {
+                                        radius: poiR,
+                                        color: POIColorArray[myI],
+                                        fillOpacity: 1,
+                                        opacity: 1,
+                                        fill: true,
+                                        fillColor: POIColorArray[myI]
+                                    });
+                                    // L.imageOverlay(global.poimap[myI],[[poix-poiR,poiy-poiR],[poix+poiR,poiy+poiR]]);
+                                    POIGroup.push(poiCircle);
+                                }
+                            }
+                            POIGroups = L.layerGroup(POIGroup);
+                            map.addLayer(POIGroups);
+                            // }
+                        }
+                        else {
+                            if (Object.keys(POIGroups).length !== 0) {
+                                POIGroups.clearLayers();
+                                POIGroup = [];
+                            }
+                        }
+                    }
+
+                }
+            });
+        }
+        else if(fValue ===1){
+
+            Promise.all([
+                d3.json("./splitResult/RP.json"), axios.get(global.server + '/vis1/od_aster'),
+                axios.get(global.server + '/vis1/poi_total', {params})
+            ]).then(([data, asterData, poiData]) => {
+                console.log(asterData);
+                let type = [data.P0, data.P1, data.P2, data.P3, data.P4, data.P5];
+                let key = ['P0', 'P1', 'P2', 'P3', 'P4','P5'];
+
+                //TODO:remove flag
+                // let flag=true;
+                //draw square by LLY
+                if (Object.keys(innerCircleGroups).length !== 0) {
+                    innerCircleGroups.clearLayers();
+                    innerCircleGroup = [];
+                }
+                for (let ii = 0; ii < type.length; ii++) {
+                    for (let jj = 0; jj < type[ii].length; jj++) {
+                        let grid = type[ii][jj];
+                        let i = parseInt(grid.slice(0, 2));
+                        let j = parseInt(grid.slice(2, 4));
+                        // let bound = [[bottom + i * heightDistance, left + j * wideDistance], [bottom + (i + 1) * heightDistance, left + (j + 1) * wideDistance]];
+                        // let colorScale = d3.scaleOrdinal()
+                        //     .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
+                        //     .range([d3.schemePastel1[0], d3.schemePastel1[1], d3.schemePastel1[2], d3.schemePastel1[3], d3.schemePastel1[5]]);
+                        // let color = colorScale(key[ii]);
+                        let incolorScale = d3.scaleOrdinal()
+                            .domain(['P0', 'P1', 'P2', 'P3', 'P4','P5'])
+                            .range([d3.schemeCategory10[0], d3.schemeCategory10[1], d3.schemeCategory10[2], d3.schemeCategory10[3], d3.schemeCategory10[4], d3.schemeCategory10[5]]);
+                        let incolor = incolorScale(key[ii]);
+                        let o1color = ['#62A7D1', '#AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294'];
+                        let o2color = ['#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7'];
+                        let o3color = ['AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1'];
+                        let o4color = ['#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#333333'];
+                        let o5color = ['#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#F2A444', '#818C94'];
+                        let o6color = ['#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#F2A444', '#818C94'];
+                        let customColorScale = d3.scaleOrdinal()
+                            .domain(['P0', 'P1', 'P2', 'P3', 'P4','P5'])
+                            .range([o1color, o2color, o3color, o4color, o5color,o6color]);
+                        let ocolor = customColorScale(key[ii]);
+                        //divide grid
+                        // L.rectangle(bound, {color: "white", fill:true,opacity: 1, weight: 1,stroke:true,fillColor:"white",fillOpacity:1}).addTo(global.map);
+                        // let newBound = [[bound[0][0] / 3, bound[0][1] / 3], [bound[1][0] / 3, bound[1][1] / 3]];
+                        let ir = 200;
+                        let cy = left + j * wideDistance + wideDistance / 2;
+                        let cx = bottom + i * heightDistance + heightDistance / 2;
+                        let oR = 450;
+                        let outR = 640;
+                        //inner circle
+                        let flowSum = function () {
+                            let sum = 0;
+                            for (let g = 0; g < 24; g++) {
+                                sum += parseInt(asterData["data"]["data"][30 * i + j][g][3])
+                            }
+                            return sum;
+                        };
+                        let mapLevel = map.getZoom();
+                        if (mapLevel >= 12) {
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            let c1 = L.circle([cx, cy], {
+                                radius: ir, color: incolor, opacity: 0.78, fill: true, fillOpacity:
+                                Math.log(Math.pow(1.00005, flowSum())) / 1.5
+                                , stroke: false
+                            });
+                            let c2 = L.circle([cx, cy], {
+                                radius: oR,
+                                color: "#101010",
+                                opacity: 0.1,
+                                fill: false
+                            });
+                            let c3 = L.circle([cx, cy], {
+                                radius: outR,
+                                color: "#101010",
+                                opacity: 0.1,
+                                fill: false
+                            });
+                            innerCircleGroup.push(c1, c2, c3)
+                            innerCircleGroups = L.layerGroup(innerCircleGroup)
+                            map.addLayer(innerCircleGroups);
+                            // }
+                        }
+                        else {
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            let c1 = L.circle([cx, cy], {
+                                radius: outR, color: incolor, opacity: 0.78, fill: true, fillOpacity:
+                                Math.log(Math.pow(1.00005, flowSum())) / 1.5
+                                , stroke: false
+                            });
+                            innerCircleGroup.push(c1)
+                            innerCircleGroups = L.layerGroup(innerCircleGroup)
+                            map.addLayer(innerCircleGroups);
+                            // }
+                        }
+                        if (mapLevel > 12) {
+                            //do 24hr arc
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            let numGrid = 30 * i + j;
+                            let angs = 0;
+                            let ange = 15;
+                            let anStep = 15;
+                            for (let myI = 0; myI < 24; myI++) {
+                                let inCurve, outCurve;
+                                let colorA = "#D38ABD";
+                                let colorB = "#8CD1E0";
+                                if (asterData["data"]["data"][numGrid][myI][1] > asterData["data"]["data"][numGrid][myI][2]) {
+                                    inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: 'g5732a8',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: '#4284f5',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    curveGroup.push(inCurve);
+                                    curveGroup.push(outCurve);
+                                }
+                                else {
+                                    outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: '#4284f5',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: '#5732a8',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    //     outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs+myI*anStep, ange+myI*anStep, asterData["data"]["data"][numGrid][myI][2]),
+                                    //         {color: ocolor[5], fill: true,stroke:true,fillColor:'#4284f5',fillOpacity:1,weight:1});
+                                    //     inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs+myI*anStep, ange+myI*anStep, asterData["data"]["data"][numGrid][myI][1]),
+                                    //         {color: ocolor[5], fill: true,stroke:true,fillColor:'#5732a8',fillOpacity:1,weight:1});
+                                    //
+                                    curveGroup.push(outCurve);
+                                    curveGroup.push(inCurve);
+                                }
+                            }
+                            curveGroups = L.layerGroup(curveGroup);
+                            map.addLayer(curveGroups);
+                            // }
+                        }
+                        else {
+                            if (Object.keys(curveGroups).length !== 0) {
+                                curveGroups.clearLayers();
+                                curveGroup = [];
+                            }
+                        }
+                        //draw poi circle 9
+                        if (mapLevel > 12) {
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            for (let myI = 0; myI < 9; myI++) {
+                                let poir = 0.0057;
+                                let poiR = 20;
+                                if (poiData["data"]["data"][30 * i + j][POIMap[myI]]) {
+                                    // poiR = (poiData["data"]["data"][30*i+j][POIMap[myI]]/200>100)?100:poiData["data"]["data"][30*i+j][POIMap[myI]]/150;
+                                    poiR = poiData["data"]["data"][30 * i + j][POIMap[myI]] / 200 * 40 + 30;
+                                    if (poiR > 80) {
+                                        poiR = 80;
+                                    }
+
+                                }
+                                if (poiR > 30) {
+                                    let poix = cx + poir * Math.sin(2 * Math.PI / 9 * myI) * 0.87;
+                                    let poiy = cy + poir * Math.cos(2 * Math.PI / 9 * myI);
+                                    let poiCircle = L.circle([poix, poiy], {
+                                        radius: poiR,
+                                        color: POIColorArray[myI],
+                                        fillOpacity: 1,
+                                        opacity: 1,
+                                        fill: true,
+                                        fillColor: POIColorArray[myI]
+                                    });
+                                    // L.imageOverlay(global.poimap[myI],[[poix-poiR,poiy-poiR],[poix+poiR,poiy+poiR]]);
+                                    POIGroup.push(poiCircle);
+                                }
+                            }
+                            POIGroups = L.layerGroup(POIGroup);
+                            map.addLayer(POIGroups);
+                            // }
+                        }
+                        else {
+                            if (Object.keys(POIGroups).length !== 0) {
+                                POIGroups.clearLayers();
+                                POIGroup = [];
+                            }
+                        }
+                    }
+
+                }
+            });
+        }
+        else if(fValue ===2){
+
+            Promise.all([
+                d3.json("./mergeResult/RP.json"), axios.get(global.server + '/vis1/od_aster'),
+                axios.get(global.server + '/vis1/poi_total', {params})
+            ]).then(([data, asterData, poiData]) => {
+                console.log(asterData);
+                let type = [data.P0, data.P1, data.P2, data.P3, data.P5];
+                let key = ['P0', 'P1', 'P2', 'P3', 'P5'];
+
+                //TODO:remove flag
+                // let flag=true;
+                //draw square by LLY
+                if (Object.keys(innerCircleGroups).length !== 0) {
+                    innerCircleGroups.clearLayers();
+                    innerCircleGroup = [];
+                }
+                for (let ii = 0; ii < type.length; ii++) {
+                    for (let jj = 0; jj < type[ii].length; jj++) {
+                        let grid = type[ii][jj];
+                        let i = parseInt(grid.slice(0, 2));
+                        let j = parseInt(grid.slice(2, 4));
+                        // let bound = [[bottom + i * heightDistance, left + j * wideDistance], [bottom + (i + 1) * heightDistance, left + (j + 1) * wideDistance]];
+                        // let colorScale = d3.scaleOrdinal()
+                        //     .domain(['P0', 'P1', 'P2', 'P3', 'P4'])
+                        //     .range([d3.schemePastel1[0], d3.schemePastel1[1], d3.schemePastel1[2], d3.schemePastel1[3], d3.schemePastel1[5]]);
+                        // let color = colorScale(key[ii]);
+                        let incolorScale = d3.scaleOrdinal()
+                            .domain(['P0', 'P1', 'P2', 'P3', 'P5'])
+                            .range([d3.schemeCategory10[0], d3.schemeCategory10[1], d3.schemeCategory10[2], d3.schemeCategory10[3], d3.schemeCategory10[5]]);
+                        let incolor = incolorScale(key[ii]);
+                        let o1color = ['#62A7D1', '#AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294'];
+                        let o2color = ['#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7'];
+                        let o3color = ['AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294', '#62A7D1'];
+                        let o4color = ['#818C94', '#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#333333'];
+                        let o5color = ['#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#F2A444', '#818C94'];
+                        let customColorScale = d3.scaleOrdinal()
+                            .domain(['P0', 'P1', 'P2', 'P3', 'P5'])
+                            .range([o1color, o2color, o3color, o4color, o5color]);
+                        let ocolor = customColorScale(key[ii]);
+                        //divide grid
+                        // L.rectangle(bound, {color: "white", fill:true,opacity: 1, weight: 1,stroke:true,fillColor:"white",fillOpacity:1}).addTo(global.map);
+                        // let newBound = [[bound[0][0] / 3, bound[0][1] / 3], [bound[1][0] / 3, bound[1][1] / 3]];
+                        let ir = 200;
+                        let cy = left + j * wideDistance + wideDistance / 2;
+                        let cx = bottom + i * heightDistance + heightDistance / 2;
+                        let oR = 450;
+                        let outR = 640;
+                        //inner circle
+                        let flowSum = function () {
+                            let sum = 0;
+                            for (let g = 0; g < 24; g++) {
+                                sum += parseInt(asterData["data"]["data"][30 * i + j][g][3])
+                            }
+                            return sum;
+                        };
+                        let mapLevel = map.getZoom();
+                        if (mapLevel >= 12) {
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            let c1 = L.circle([cx, cy], {
+                                radius: ir, color: incolor, opacity: 0.78, fill: true, fillOpacity:
+                                Math.log(Math.pow(1.00005, flowSum())) / 1.5
+                                , stroke: false
+                            });
+                            let c2 = L.circle([cx, cy], {
+                                radius: oR,
+                                color: "#101010",
+                                opacity: 0.1,
+                                fill: false
+                            });
+                            let c3 = L.circle([cx, cy], {
+                                radius: outR,
+                                color: "#101010",
+                                opacity: 0.1,
+                                fill: false
+                            });
+                            innerCircleGroup.push(c1, c2, c3)
+                            innerCircleGroups = L.layerGroup(innerCircleGroup)
+                            map.addLayer(innerCircleGroups);
+                            // }
+                        }
+                        else {
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            let c1 = L.circle([cx, cy], {
+                                radius: outR, color: incolor, opacity: 0.78, fill: true, fillOpacity:
+                                Math.log(Math.pow(1.00005, flowSum())) / 1.5
+                                , stroke: false
+                            });
+                            innerCircleGroup.push(c1)
+                            innerCircleGroups = L.layerGroup(innerCircleGroup)
+                            map.addLayer(innerCircleGroups);
+                            // }
+                        }
+                        if (mapLevel > 12) {
+                            //do 24hr arc
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            let numGrid = 30 * i + j;
+                            let angs = 0;
+                            let ange = 15;
+                            let anStep = 15;
+                            for (let myI = 0; myI < 24; myI++) {
+                                let inCurve, outCurve;
+                                let colorA = "#D38ABD";
+                                let colorB = "#8CD1E0";
+                                if (asterData["data"]["data"][numGrid][myI][1] > asterData["data"]["data"][numGrid][myI][2]) {
+                                    inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: 'g5732a8',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: '#4284f5',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    curveGroup.push(inCurve);
+                                    curveGroup.push(outCurve);
+                                }
+                                else {
+                                    outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][2]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: '#4284f5',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
+                                        {
+                                            color: ocolor[5],
+                                            fill: true,
+                                            stroke: true,
+                                            fillColor: '#5732a8',
+                                            fillOpacity: 1,
+                                            weight: 1
+                                        });
+                                    //     outCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs+myI*anStep, ange+myI*anStep, asterData["data"]["data"][numGrid][myI][2]),
+                                    //         {color: ocolor[5], fill: true,stroke:true,fillColor:'#4284f5',fillOpacity:1,weight:1});
+                                    //     inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs+myI*anStep, ange+myI*anStep, asterData["data"]["data"][numGrid][myI][1]),
+                                    //         {color: ocolor[5], fill: true,stroke:true,fillColor:'#5732a8',fillOpacity:1,weight:1});
+                                    //
+                                    curveGroup.push(outCurve);
+                                    curveGroup.push(inCurve);
+                                }
+                            }
+                            curveGroups = L.layerGroup(curveGroup);
+                            map.addLayer(curveGroups);
+                            // }
+                        }
+                        else {
+                            if (Object.keys(curveGroups).length !== 0) {
+                                curveGroups.clearLayers();
+                                curveGroup = [];
+                            }
+                        }
+                        //draw poi circle 9
+                        if (mapLevel > 12) {
+                            // if(Math.log(Math.pow(1.00005,flowSum()))/1.5>1) {
+                            for (let myI = 0; myI < 9; myI++) {
+                                let poir = 0.0057;
+                                let poiR = 20;
+                                if (poiData["data"]["data"][30 * i + j][POIMap[myI]]) {
+                                    // poiR = (poiData["data"]["data"][30*i+j][POIMap[myI]]/200>100)?100:poiData["data"]["data"][30*i+j][POIMap[myI]]/150;
+                                    poiR = poiData["data"]["data"][30 * i + j][POIMap[myI]] / 200 * 40 + 30;
+                                    if (poiR > 80) {
+                                        poiR = 80;
+                                    }
+
+                                }
+                                if (poiR > 30) {
+                                    let poix = cx + poir * Math.sin(2 * Math.PI / 9 * myI) * 0.87;
+                                    let poiy = cy + poir * Math.cos(2 * Math.PI / 9 * myI);
+                                    let poiCircle = L.circle([poix, poiy], {
+                                        radius: poiR,
+                                        color: POIColorArray[myI],
+                                        fillOpacity: 1,
+                                        opacity: 1,
+                                        fill: true,
+                                        fillColor: POIColorArray[myI]
+                                    });
+                                    // L.imageOverlay(global.poimap[myI],[[poix-poiR,poiy-poiR],[poix+poiR,poiy+poiR]]);
+                                    POIGroup.push(poiCircle);
+                                }
+                            }
+                            POIGroups = L.layerGroup(POIGroup);
+                            map.addLayer(POIGroups);
+                            // }
+                        }
+                        else {
+                            if (Object.keys(POIGroups).length !== 0) {
+                                POIGroups.clearLayers();
+                                POIGroup = [];
+                            }
+                        }
+                    }
+
+                }
+            });
+        }
+    }
+    worldMap2DetailView = () => {
+        this.setState((state) => (
+            {
+                getDetailViewMessage: !state.getDetailViewMessage
+            }))
+    };
+    //Choose POI List insite heatmap of POI list
+    handlePOIChooseClose = (chooseIndex) => {
+        this.setState({
+            POIChooseClose: false,
+            POIChooseIndex: chooseIndex,
+            HeatMapMode: true,
+        })
+    };
+    POIChooseDialog2POIHeatMap = (msg) => {
+        console.log('msg', msg)
+        this.setState({
+            POIChooseDialog2POIHeatMapMsg: msg
+        })
+    };
+    closeHeatMapMode = () => {
+
+        this.setState({
+            HeatMapMode: false,
+        })
+    };
+    addHistory = ()=>{
+        this.setState((state) => (
+            {
+                addHistory: !state.addHistory
+            }))
+    };
+
+    //Life cycle
+    ///////////
+    //Deprecate
+    //@ using number to save the history in global
+    ///////////
+    componentDidUpdate = (prevProps, prevState) => {
+        let saveNum = this.state.saveCount - prevState.saveCount;
+        if (saveNum !== 0) {
+            for (let i = 0; i < saveNum; i++) {
+                global.history.push({})
             }
-        });
+            for (let i = prevState.saveCount; i < this.state.saveCount; i++) {
+                //TODO:put content inside of history
+                //top 3 of poi
+                //GET
+                //lineData
+                //GET
+                //construct history
+                global.history.push({});
+                global.history[i]["top3POI"] = this.state.top3POI;
+                global.history[i]["lineData"] = this.state.lineData;
+                let card = d3.select("#historyLog")
+                    .data(global.history)
+                    .append("div")
+                    .attr("style", "float:left;width:157px;height:167px;border:1px;borderColor:LightGrey");
+                let hmap = card.append("div")
+                    .attr("id", function (d, i) {
+                        return "hmap" + i.toString()
+                    })
+                    .attr("style", "height:150px;width:157px;")
+                for (let j = 0; j < 3; j++) {
+                    let badge = card.append("div")
+                        .append('embed')
+                        .attr('src', function () {
+                            return global.poimap[POIMap.indexOf(global.history[j]["top3POI"])]
+                        })
+                        .attr("style", "height:15px;width:15px;")
+                        .attr('src', function () {
+                            return global.poimap[POIMap.indexOf(global.history[j]["top3POI"])]
+                        })
+                }
+                let colorLine = card.append("div")
+                    .attr("class", "gradient-line")
+                    .attr("width", 100)
+                    .attr("height", 15)
+                    .attr("border", 1)
+                    .attr("borderColor", "LightGrey")
+                    .attr("float", "right")
+                    .attr('marginTop', 3);
+                this.historyDraw(i)
+            }
+        }
+    };
+
+    componentDidMount() {
+        this.historyDraw(0)
+        this.drawGrid(global.history[0]["map"], global.curveGroup0, global.curveGroups0, global.innerCircleGroup0, global.innerCircleGroups0, global.POIGroup0, global.POIGroups0,0);
+        this.historyDraw(1)
+        this.drawGrid(global.history[1]["map"], global.curveGroup1, global.curveGroups1, global.innerCircleGroup1, global.innerCircleGroups1, global.POIGroup1, global.POIGroups1,1);
+        this.historyDraw(2)
+        this.drawGrid(global.history[2]["map"], global.curveGroup2, global.curveGroups2, global.innerCircleGroup2, global.innerCircleGroups2, global.POIGroup2, global.POIGroups2,2)
     }
 
-    worldMap2DetailView = () => {
-        this.setState((state)=>(
-            {
-                getDetailViewMessage:!state.getDetailViewMessage
-            } ) )
-    };
+    componentWillUpdate(nextProps,nextState){
+       if(nextState.addHistory!==this.state.addHistory){
+         //find Rectangle
+          let saveData = {};
+          console.log(global.selectGroups);
 
+          if(Object.keys(global.selectGroups._layers).length ===0){
+            saveData["rectangle"] = {};
+          }
+          else{
 
-    //Choose POI List insite heatmap of POI list
-    handlePOIChooseClose=(chooseIndex)=>{
-       this.setState({
-           POIChooseClose:false,
-           POIChooseIndex:chooseIndex,
-           HeatMapMode:true,
-       })
-    };
-    handlePOIChooseOpen=()=>{
-        this.setState({
-            POIChooseClose:true
-        })
-    };
-
-    POIChooseDialog2POIHeatMap=(msg)=>{
-        console.log('msg',msg)
-        this.setState({
-            POIChooseDialog2POIHeatMapMsg:msg
-        })
-    };
-
-    closeHeatMapMode = ()=>{
-
-        this.setState({
-            HeatMapMode:false,
-        })
-    };
-
+          }
+       }
+    }
     render() {
         const {date, format, mode, inputFormat} = this.state;
         //TODO:finish POIhistory
@@ -695,9 +1133,9 @@ class MapContainer extends Component {
                                 <span className="sigma-line-text">Data Set</span>
                             </div>
                         </div>
-                        <div align="middle" >
-                            <select style={{width:"245px",align:"center"}} className="browser-default selectClass">
-                                <option value="1"> Using HangZhou POIS      </option>
+                        <div align="middle">
+                            <select style={{width: "245px", align: "center"}} className="browser-default selectClass">
+                                <option value="1"> Using HangZhou POIS</option>
                             </select>
                         </div>
                         <div style={{marginTop: "10px"}}>
@@ -735,7 +1173,7 @@ class MapContainer extends Component {
                             small={true}
                             daySize={28}
                             isOutsideRange={(day) =>
-                                !(day.isBefore(moment("2015-04-30")) && day.isAfter(moment("2015-04-01")))
+                                !(day.isBefore(moment("2015-05-01")) && day.isAfter(moment("2015-04-01")))
                             }
                             initialVisibleMonth={() => moment("2015-04")}
                             block={true}
@@ -787,29 +1225,36 @@ class MapContainer extends Component {
                     <Card style={{float: "left", width: '80rem', height: '716.8px', marginLeft: '1px'}}>
                         <Card.Header as="h6" style={{height: "44px", float: "left"}}>
                             <div style={{float: "left"}}>
-                                <span style={{float:"left",marginRight:"10px"}}>Global Map View</span>
-                                <DropdownButton style={{float:"left",marginRight:"10px"}} variant="light"  size="sm" id="dropdown-basic-button" title="Heatmap">
-                                    <Dropdown.Item onClick={this.handlePOIChooseOpen} href="#/action-1">POI</Dropdown.Item>
+                                <span style={{float: "left", marginRight: "10px"}}>Global Map View</span>
+                                <DropdownButton style={{float: "left", marginRight: "10px"}} variant="light" size="sm"
+                                                id="dropdown-basic-button" title="Heatmap">
+                                    <Dropdown.Item onClick={this.handlePOIChooseOpen}
+                                                   href="#/action-1">POI</Dropdown.Item>
                                     <Dropdown.Item href="#/action-2">Traffic Flow</Dropdown.Item>
                                 </DropdownButton>
-                                <DropdownButton style={{float:"left"}} variant="light"  size="sm" id="dropdown-basic-button" title="Function Area">
+                                <DropdownButton style={{float: "left"}} variant="light" size="sm"
+                                                id="dropdown-basic-button" title="Function Area">
                                     <Dropdown.Item href="#/action-1">POI</Dropdown.Item>
                                     <Dropdown.Item href="#/action-2">Traffic Flow</Dropdown.Item>
                                 </DropdownButton>
-                                <POIChooseDialog open={this.state.POIChooseClose} close={this.handlePOIChooseClose}  toPOIHeatMap={this.POIChooseDialog2POIHeatMap}/>
+                                <POIChooseDialog open={this.state.POIChooseClose} close={this.handlePOIChooseClose}
+                                                 toPOIHeatMap={this.POIChooseDialog2POIHeatMap}/>
                             </div>
                             {/*<FontAwesomeIcon title="to save" icon="save" border pull="right" onClick={this.handleSave}/>*/}
                             {this.state.HeatMapMode &&
-                                <div>
-                                    {POIMap[this.state.POIChooseDialog2POIHeatMapMsg.toString()]}
-                            <FontAwesomeIcon title="Go back to Main Page" icon={faArrowAltCircleLeft} border pull="right" onClick={this.closeHeatMapMode}/>
-                                </div>
-                                    }
+                            <div>
+                                {POIMap[this.state.POIChooseDialog2POIHeatMapMsg.toString()]}
+                                <FontAwesomeIcon title="Go back to Main Page" icon={faArrowAltCircleLeft} border
+                                                 pull="right" onClick={this.closeHeatMapMode}/>
+                            </div>
+                            }
 
                         </Card.Header>
                         <div>
-                            {!this.state.HeatMapMode && <WorldMap redraw={this.state.redraw} sendDetailViewMessage={this.worldMap2DetailView}/>}
-                            {this.state.HeatMapMode &&<POIHeatMap fromPOIChooseDialog={this.state.POIChooseDialog2POIHeatMapMsg}/>}
+                            {!this.state.HeatMapMode &&
+                            <WorldMap redraw={this.state.redraw} sendDetailViewMessage={this.worldMap2DetailView}/>}
+                            {this.state.HeatMapMode &&
+                            <POIHeatMap fromPOIChooseDialog={this.state.POIChooseDialog2POIHeatMapMsg}/>}
 
                             {/*<div id="historyLog" ref={this.historyLog} style={{width:157,height:665,float:"left"}}>*/}
                             {/*</div>*/}
@@ -818,6 +1263,8 @@ class MapContainer extends Component {
 
                     <Card style={{float: "left", width: '24rem', height: '716.8px', marginLeft: '1px'}}>
                         <Card.Header as="h6" style={{height: "44px"}}>Snapshot Panel
+                            <FontAwesomeIcon title="Add" icon={faPlus}
+                                             pull="right" onClick={this.addHistory}/>
                         </Card.Header>
                         <Card style={{float: "left", width: '23.8rem', height: '167px'}}>
                             <div id={"hmap0"} style={{height: 168, width: '23.8rem'}}></div>
@@ -828,33 +1275,34 @@ class MapContainer extends Component {
                         <Card style={{float: "left", width: '23.8rem', height: '167px'}}>
                             <div id={"hmap2"} style={{height: 168, width: '23.8rem'}}></div>
                         </Card>
-                        <Card style={{float: "left", width: '23.8rem', height: '167px'}}>
-                            <div id={"hmap3"} style={{height: 168, width: '23.8rem'}}></div>
-                        </Card>
+                        <MapHistory/>
                     </Card>
                 </div>
                 <div>
-                    <Card style={{float: "left", width: '46rem', height: '350px'}}>
+                    <Card style={{float: "left", width: '54rem', height: '350px'}}>
                         <Card.Header as="h6" style={{height: "44px"}}>Hierarchical Bar Chart</Card.Header>
                         <RowChart redraw={this.state.redraw} passTop3POI={this.getTop3POI}/>
                     </Card>
-                    <Card style={{float: "left", width: '39rem', height: '350px'}}>
+                    <Card style={{float: "left", width: '36rem', height: '350px'}}>
                         <Card.Header as="h6" style={{height: "44px"}}>Multi-line Chart
                             <Button variant="light" size="sm"
                                     style={{marginRight: "5px", marginLeft: "10px"}}>All</Button>
-                            <Button variant="light" size="sm" onClick={this.handleCleanSelection} style={{marginRight: "5px"}}>Pick-up
+                            <Button variant="light" size="sm" onClick={this.handleCleanSelection}
+                                    style={{marginRight: "5px"}}>Pick-up
                             </Button>
-                            <Button variant="light" size="sm" onClick={this.handleCleanSelection} style={{marginRight: "2px"}}>Drop-off
+                            <Button variant="light" size="sm" onClick={this.handleCleanSelection}
+                                    style={{marginRight: "2px"}}>Drop-off
                             </Button>
                         </Card.Header>
                         <MultiLineChart redraw={this.state.redraw} passLineData={this.getLineData}/>
                     </Card>
-                    <Card style={{float: "left", width: '35rem', height: '350px'}}>
+                    <Card style={{float: "left", width: '30rem', height: '350px'}}>
                         <Card.Header as="h6" style={{height: "44px"}}>Detail View
                             {/*<FontAwesomeIcon title="next" icon={faAngleDoubleRight} border pull="right" />*/}
                             {/*<FontAwesomeIcon title="previous" icon={faAngleDoubleLeft} border pull="right" />*/}
                         </Card.Header>
-                        <DetailView getDetailViewMessage={this.state.getDetailViewMessage}/>
+                        <DetailView recBound={this.state.recBound2DetailView}
+                                    getDetailViewMessage={this.state.getDetailViewMessage}/>
                     </Card>
                 </div>
 
