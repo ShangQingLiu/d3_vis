@@ -14,14 +14,13 @@ import POIHeatMap from "../component/POIHeatMap"
 import POIChooseDialog from "../component/POIChooseDialog"
 import MultiLineChart from "../component/MultiLineChart"
 import RowChart from "../component/RowChart"
-import DetaiView from "../component/DetailView"
+// import DetaiView from "../component/DetailView"
 import Glyph from '../component/Glyph'
 import '../css/MapContainer.css'
 import * as d3 from 'd3'
 //moment
 import moment from 'moment'
 //react-date
-import {Form, Input, FormGroup, Container, Label} from 'reactstrap';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import {SingleDatePicker} from 'react-dates';
@@ -33,6 +32,7 @@ import {
     faPlus
 } from '@fortawesome/free-solid-svg-icons'
 import DetailView from "./DetailView";
+import HeatMapTimePicker from "../HeatMapTimePicker";
 
 library.add(faSave);
 library.add(faAngleDoubleLeft);
@@ -62,8 +62,11 @@ class MapContainer extends Component {
             POIChooseIndex: '',
             POIChooseDialog2POIHeatMapMsg: '',
             HeatMapMode: false,
+            HeatMapModes:'POI',
             recBound2DetailView: '',
-            addHistory:false,
+            addHistory: false,
+            setStartDestination:false,
+
         };
     }
 
@@ -238,6 +241,8 @@ class MapContainer extends Component {
     handledbClick = () => {
 
     };
+
+
     handleCleanSelection = () => {
         global.selectGroups.clearLayers();
         global.selectGroup = [];
@@ -251,6 +256,12 @@ class MapContainer extends Component {
         // this.setState(state => ({
         //     saveCount: state.saveCount + 1
         // }))
+    };
+    handleTrafficFlowChooseOpen = () => {
+        this.setState({
+            HeatMapMode:true,
+            HeatMapModes:'Traffic Flow',
+        })
     };
     getTop3POI = (m) => {
         this.setState({
@@ -274,7 +285,8 @@ class MapContainer extends Component {
             // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         }).addTo(global.history[saveCount]["map"]);
     }
-    drawGrid(map, curveGroup, curveGroups, innerCircleGroup, innerCircleGroups, POIGroup, POIGroups,fValue) {
+
+    drawGrid(map, curveGroup, curveGroups, innerCircleGroup, innerCircleGroups, POIGroup, POIGroups, fValue) {
         function describeArc(lng, lat, innerRadius, outerRadius, startAngle, endAngle, value) {
             let innerTest = 0.0017884;
             let outerTest = 0.00400;
@@ -344,7 +356,7 @@ class MapContainer extends Component {
         let params = {
             ty: ty
         };
-        if(fValue === 0){
+        if (fValue === 0) {
             Promise.all([
                 d3.json("./RP.json"), axios.get(global.server + '/vis1/od_aster'),
                 axios.get(global.server + '/vis1/poi_total', {params})
@@ -445,8 +457,8 @@ class MapContainer extends Component {
                             let anStep = 15;
                             for (let myI = 0; myI < 24; myI++) {
                                 let inCurve, outCurve;
-                                let colorA = "#D38ABD";
-                                let colorB = "#8CD1E0";
+                                // let colorA = "#D38ABD";
+                                // let colorB = "#8CD1E0";
                                 if (asterData["data"]["data"][numGrid][myI][1] > asterData["data"]["data"][numGrid][myI][2]) {
                                     inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
                                         {
@@ -551,7 +563,7 @@ class MapContainer extends Component {
                 }
             });
         }
-        else if(fValue ===1){
+        else if (fValue === 1) {
 
             Promise.all([
                 d3.json("./splitResult/RP.json"), axios.get(global.server + '/vis1/od_aster'),
@@ -559,7 +571,7 @@ class MapContainer extends Component {
             ]).then(([data, asterData, poiData]) => {
                 console.log(asterData);
                 let type = [data.P0, data.P1, data.P2, data.P3, data.P4, data.P5];
-                let key = ['P0', 'P1', 'P2', 'P3', 'P4','P5'];
+                let key = ['P0', 'P1', 'P2', 'P3', 'P4', 'P5'];
 
                 //TODO:remove flag
                 // let flag=true;
@@ -579,7 +591,7 @@ class MapContainer extends Component {
                         //     .range([d3.schemePastel1[0], d3.schemePastel1[1], d3.schemePastel1[2], d3.schemePastel1[3], d3.schemePastel1[5]]);
                         // let color = colorScale(key[ii]);
                         let incolorScale = d3.scaleOrdinal()
-                            .domain(['P0', 'P1', 'P2', 'P3', 'P4','P5'])
+                            .domain(['P0', 'P1', 'P2', 'P3', 'P4', 'P5'])
                             .range([d3.schemeCategory10[0], d3.schemeCategory10[1], d3.schemeCategory10[2], d3.schemeCategory10[3], d3.schemeCategory10[4], d3.schemeCategory10[5]]);
                         let incolor = incolorScale(key[ii]);
                         let o1color = ['#62A7D1', '#AF89C7', '#F2A444', '#818C94', '#DB6F53', '#67C294'];
@@ -589,8 +601,8 @@ class MapContainer extends Component {
                         let o5color = ['#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#F2A444', '#818C94'];
                         let o6color = ['#DB6F53', '#67C294', '#62A7D1', '#AF89C7', '#F2A444', '#818C94'];
                         let customColorScale = d3.scaleOrdinal()
-                            .domain(['P0', 'P1', 'P2', 'P3', 'P4','P5'])
-                            .range([o1color, o2color, o3color, o4color, o5color,o6color]);
+                            .domain(['P0', 'P1', 'P2', 'P3', 'P4', 'P5'])
+                            .range([o1color, o2color, o3color, o4color, o5color, o6color]);
                         let ocolor = customColorScale(key[ii]);
                         //divide grid
                         // L.rectangle(bound, {color: "white", fill:true,opacity: 1, weight: 1,stroke:true,fillColor:"white",fillOpacity:1}).addTo(global.map);
@@ -654,8 +666,8 @@ class MapContainer extends Component {
                             let anStep = 15;
                             for (let myI = 0; myI < 24; myI++) {
                                 let inCurve, outCurve;
-                                let colorA = "#D38ABD";
-                                let colorB = "#8CD1E0";
+                                // let colorA = "#D38ABD";
+                                // let colorB = "#8CD1E0";
                                 if (asterData["data"]["data"][numGrid][myI][1] > asterData["data"]["data"][numGrid][myI][2]) {
                                     inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
                                         {
@@ -760,7 +772,7 @@ class MapContainer extends Component {
                 }
             });
         }
-        else if(fValue ===2){
+        else if (fValue === 2) {
 
             Promise.all([
                 d3.json("./mergeResult/RP.json"), axios.get(global.server + '/vis1/od_aster'),
@@ -862,8 +874,8 @@ class MapContainer extends Component {
                             let anStep = 15;
                             for (let myI = 0; myI < 24; myI++) {
                                 let inCurve, outCurve;
-                                let colorA = "#D38ABD";
-                                let colorB = "#8CD1E0";
+                                // let colorA = "#D38ABD";
+                                // let colorB = "#8CD1E0";
                                 if (asterData["data"]["data"][numGrid][myI][1] > asterData["data"]["data"][numGrid][myI][2]) {
                                     inCurve = L.curve(describeArc(cy, cx, 3.5, 7.9, angs + myI * anStep, ange + myI * anStep, asterData["data"]["data"][numGrid][myI][1]),
                                         {
@@ -969,6 +981,7 @@ class MapContainer extends Component {
             });
         }
     }
+
     worldMap2DetailView = () => {
         this.setState((state) => (
             {
@@ -976,111 +989,127 @@ class MapContainer extends Component {
             }))
     };
     //Choose POI List insite heatmap of POI list
+    handlePOIChooseOpen = () => {
+        this.setState({
+            POIChooseClose: true,
+        })
+    };
     handlePOIChooseClose = (chooseIndex) => {
         this.setState({
             POIChooseClose: false,
             POIChooseIndex: chooseIndex,
-            HeatMapMode: true,
         })
     };
     POIChooseDialog2POIHeatMap = (msg) => {
-        console.log('msg', msg)
+        console.log('msg', msg);
         this.setState({
-            POIChooseDialog2POIHeatMapMsg: msg
+            POIChooseDialog2POIHeatMapMsg: msg,
+            HeatMapMode: true,
+            HeatMapModes:'POI',
         })
     };
     closeHeatMapMode = () => {
-
         this.setState({
             HeatMapMode: false,
         })
     };
-    addHistory = ()=>{
+    addHistory = () => {
         this.setState((state) => (
             {
                 addHistory: !state.addHistory
             }))
     };
+    testGetRoute = ()=>{
+        Promise.all(
+            [axios.get(global.server + '/vis1/getRoute')]
+        ).then(([data])=>{
+            console.log("test",data);
+        })
+    };
 
+    setStartDestination=()=>{
+     this.setState({setStartDestination:true})
+    };
     //Life cycle
     ///////////
     //Deprecate
     //@ using number to save the history in global
     ///////////
-    componentDidUpdate = (prevProps, prevState) => {
-        let saveNum = this.state.saveCount - prevState.saveCount;
-        if (saveNum !== 0) {
-            for (let i = 0; i < saveNum; i++) {
-                global.history.push({})
-            }
-            for (let i = prevState.saveCount; i < this.state.saveCount; i++) {
-                //TODO:put content inside of history
-                //top 3 of poi
-                //GET
-                //lineData
-                //GET
-                //construct history
-                global.history.push({});
-                global.history[i]["top3POI"] = this.state.top3POI;
-                global.history[i]["lineData"] = this.state.lineData;
-                let card = d3.select("#historyLog")
-                    .data(global.history)
-                    .append("div")
-                    .attr("style", "float:left;width:157px;height:167px;border:1px;borderColor:LightGrey");
-                let hmap = card.append("div")
-                    .attr("id", function (d, i) {
-                        return "hmap" + i.toString()
-                    })
-                    .attr("style", "height:150px;width:157px;")
-                for (let j = 0; j < 3; j++) {
-                    let badge = card.append("div")
-                        .append('embed')
-                        .attr('src', function () {
-                            return global.poimap[POIMap.indexOf(global.history[j]["top3POI"])]
-                        })
-                        .attr("style", "height:15px;width:15px;")
-                        .attr('src', function () {
-                            return global.poimap[POIMap.indexOf(global.history[j]["top3POI"])]
-                        })
-                }
-                let colorLine = card.append("div")
-                    .attr("class", "gradient-line")
-                    .attr("width", 100)
-                    .attr("height", 15)
-                    .attr("border", 1)
-                    .attr("borderColor", "LightGrey")
-                    .attr("float", "right")
-                    .attr('marginTop', 3);
-                this.historyDraw(i)
-            }
-        }
-    };
+    // componentDidUpdate = (prevProps, prevState) => {
+    //     let saveNum = this.state.saveCount - prevState.saveCount;
+    //     if (saveNum !== 0) {
+    //         for (let i = 0; i < saveNum; i++) {
+    //             global.history.push({})
+    //         }
+    //         for (let i = prevState.saveCount; i < this.state.saveCount; i++) {
+    //             //TODO:put content inside of history
+    //             //top 3 of poi
+    //             //GET
+    //             //lineData
+    //             //GET
+    //             //construct history
+    //             global.history.push({});
+    //             global.history[i]["top3POI"] = this.state.top3POI;
+    //             global.history[i]["lineData"] = this.state.lineData;
+    //             let card = d3.select("#historyLog")
+    //                 .data(global.history)
+    //                 .append("div")
+    //                 .attr("style", "float:left;width:157px;height:167px;border:1px;borderColor:LightGrey");
+    //             let hmap = card.append("div")
+    //                 .attr("id", function (d, i) {
+    //                     return "hmap" + i.toString()
+    //                 })
+    //                 .attr("style", "height:150px;width:157px;")
+    //             for (let j = 0; j < 3; j++) {
+    //                 let badge = card.append("div")
+    //                     .append('embed'this.props.mode)
+    //                     .attr('src', function () {
+    //                         return global.poimap[POIMap.indexOf(global.history[j]["top3POI"])]
+    //                     })
+    //                     .attr("style", "height:15px;width:15px;")
+    //                     .attr('src', function () {
+    //                         return global.poimap[POIMap.indexOf(global.history[j]["top3POI"])]
+    //                     })
+    //             }
+    //             let colorLine = card.append("div")
+    //                 .attr("class", "gradient-line")
+    //                 .attr("width", 100)
+    //                 .attr("height", 15)
+    //                 .attr("border", 1)
+    //                 .attr("borderColor", "LightGrey")
+    //                 .attr("float", "right")
+    //                 .attr('marginTop', 3);
+    //             this.historyDraw(i)
+    //         }
+    //     }
+    // };
 
     componentDidMount() {
         this.historyDraw(0)
-        this.drawGrid(global.history[0]["map"], global.curveGroup0, global.curveGroups0, global.innerCircleGroup0, global.innerCircleGroups0, global.POIGroup0, global.POIGroups0,0);
+        this.drawGrid(global.history[0]["map"], global.curveGroup0, global.curveGroups0, global.innerCircleGroup0, global.innerCircleGroups0, global.POIGroup0, global.POIGroups0, 0);
         this.historyDraw(1)
-        this.drawGrid(global.history[1]["map"], global.curveGroup1, global.curveGroups1, global.innerCircleGroup1, global.innerCircleGroups1, global.POIGroup1, global.POIGroups1,1);
+        this.drawGrid(global.history[1]["map"], global.curveGroup1, global.curveGroups1, global.innerCircleGroup1, global.innerCircleGroups1, global.POIGroup1, global.POIGroups1, 1);
         this.historyDraw(2)
-        this.drawGrid(global.history[2]["map"], global.curveGroup2, global.curveGroups2, global.innerCircleGroup2, global.innerCircleGroups2, global.POIGroup2, global.POIGroups2,2)
+        this.drawGrid(global.history[2]["map"], global.curveGroup2, global.curveGroups2, global.innerCircleGroup2, global.innerCircleGroups2, global.POIGroup2, global.POIGroups2, 2)
     }
 
-    componentWillUpdate(nextProps,nextState){
-       if(nextState.addHistory!==this.state.addHistory){
-         //find Rectangle
-          let saveData = {};
-          console.log(global.selectGroups);
+    componentWillUpdate(nextProps, nextState) {
+        if (nextState.addHistory !== this.state.addHistory) {
+            //find Rectangle
+            let saveData = {};
+            console.log(global.selectGroups);
 
-          if(Object.keys(global.selectGroups._layers).length ===0){
-            saveData["rectangle"] = {};
-          }
-          else{
+            if (Object.keys(global.selectGroups._layers).length === 0) {
+                saveData["rectangle"] = {};
+            }
+            else {
 
-          }
-       }
+            }
+        }
     }
+
     render() {
-        const {date, format, mode, inputFormat} = this.state;
+        // const {date, format, mode, inputFormat} = this.state;
         //TODO:finish POIhistory
         // let poiHistory = Object.keys(global.history).length === 0 ? global.history.map((item, index) => (
         //     //calculate the new history
@@ -1160,7 +1189,7 @@ class MapContainer extends Component {
                             // }
                             inputIconPosition="after"
                             small={true}
-                            block={false}
+                            block={true}
                             numberOfMonths={1}
                             date={this.state.date}
                             onDateChange={date => this.setState({date})}
@@ -1170,13 +1199,11 @@ class MapContainer extends Component {
                             }
                             openDirection="down"
                             hideKeyboardShortcutsPanel={true}
-                            small={true}
                             daySize={28}
                             isOutsideRange={(day) =>
                                 !(day.isBefore(moment("2015-05-01")) && day.isAfter(moment("2015-04-01")))
                             }
                             initialVisibleMonth={() => moment("2015-04")}
-                            block={true}
                             placeholder={"Select Date                                 ▼"}
                         />
                         <div className="sigma-content">
@@ -1229,21 +1256,28 @@ class MapContainer extends Component {
                                 <DropdownButton style={{float: "left", marginRight: "10px"}} variant="light" size="sm"
                                                 id="dropdown-basic-button" title="Heatmap">
                                     <Dropdown.Item onClick={this.handlePOIChooseOpen}
-                                                   href="#/action-1">POI</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-2">Traffic Flow</Dropdown.Item>
+                                                   >POI</Dropdown.Item>
+                                    <Dropdown.Item onClick={this.handleTrafficFlowChooseOpen} >Traffic
+                                        Flow</Dropdown.Item>
                                 </DropdownButton>
                                 <DropdownButton style={{float: "left"}} variant="light" size="sm"
                                                 id="dropdown-basic-button" title="Function Area">
-                                    <Dropdown.Item href="#/action-1">POI</Dropdown.Item>
+                                    <Dropdown.Item onClick={this.testGetRoute}>POI</Dropdown.Item>
                                     <Dropdown.Item href="#/action-2">Traffic Flow</Dropdown.Item>
                                 </DropdownButton>
                                 <POIChooseDialog open={this.state.POIChooseClose} close={this.handlePOIChooseClose}
-                                                 toPOIHeatMap={this.POIChooseDialog2POIHeatMap}/>
+                                                 topoiheatmap={this.POIChooseDialog2POIHeatMap}/>
                             </div>
                             {/*<FontAwesomeIcon title="to save" icon="save" border pull="right" onClick={this.handleSave}/>*/}
                             {this.state.HeatMapMode &&
                             <div>
                                 {POIMap[this.state.POIChooseDialog2POIHeatMapMsg.toString()]}
+                                <HeatMapTimePicker/>
+                                <label style={{marginLeft:20}}>
+                                    <input id="checkTrafficFlow" type="checkbox" name="group0" className="filled-in"
+                                           onClick={this.setStartDestination}/>
+                                    <span>specify starting point and destination</span>
+                                </label>
                                 <FontAwesomeIcon title="Go back to Main Page" icon={faArrowAltCircleLeft} border
                                                  pull="right" onClick={this.closeHeatMapMode}/>
                             </div>
@@ -1254,7 +1288,7 @@ class MapContainer extends Component {
                             {!this.state.HeatMapMode &&
                             <WorldMap redraw={this.state.redraw} sendDetailViewMessage={this.worldMap2DetailView}/>}
                             {this.state.HeatMapMode &&
-                            <POIHeatMap fromPOIChooseDialog={this.state.POIChooseDialog2POIHeatMapMsg}/>}
+                            <POIHeatMap setStartDestination={this.state.setStartDestination} mode={this.state.HeatMapModes} frompoichoosedialog={this.state.POIChooseDialog2POIHeatMapMsg}/>}
 
                             {/*<div id="historyLog" ref={this.historyLog} style={{width:157,height:665,float:"left"}}>*/}
                             {/*</div>*/}

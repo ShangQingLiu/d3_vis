@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import * as d3 from 'd3'
-import {global, iconName, POIColorArray} from "../constants/constant";
+import {global, POIColorArray} from "../constants/constant";
 import axios from 'axios'
 
 class DetailView extends Component {
@@ -19,20 +19,20 @@ class DetailView extends Component {
             .append("svg")
             .attr("width", width)
             .attr("height", height);
-        let arcCircle = d3.arc()
-            .innerRadius(0)
-            .outerRadius(height / 10)
-            .startAngle(Math.PI / 2)
-            .endAngle(Math.PI * 2);
-        let arcCircleFactory = d3.arc()
-            .innerRadius(0)
-            .outerRadius(height / 10)
-            .startAngle(function (d) {
-                return Math.PI / 10 * d
-            })
-            .endAngle(function (d) {
-                return Math.PI / 10 * (d + 1)
-            });
+        // let arcCircle = d3.arc()
+        //     .innerRadius(0)
+        //     .outerRadius(height / 10)
+        //     .startAngle(Math.PI / 2)
+        //     .endAngle(Math.PI * 2);
+        // let arcCircleFactory = d3.arc()
+        //     .innerRadius(0)
+        //     .outerRadius(height / 10)
+        //     .startAngle(function (d) {
+        //         return Math.PI / 10 * d
+        //     })
+        //     .endAngle(function (d) {
+        //         return Math.PI / 10 * (d + 1)
+        //     });
 
         let max = d3.extent([d3.extent(arcData1)[1],d3.extent(arcData2)][1])[1]
         // console.log("max",max)

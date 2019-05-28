@@ -19,11 +19,13 @@
     "d3-request": "^1.0.6",
     "d3-voronoi": "^1.1.4",
     "dc": "^3.0.12",
+    "iso8601-js-period": "^0.2.1",
     "jquery": "^3.4.1",
     "leaflet": "^1.4.0",
     "leaflet-ant-path": "^1.2.1",
     "leaflet-arc": "^1.0.2",
     "leaflet-curve": "^1.0.0",
+    "leaflet-timedimension": "^1.1.0",
     "mapbox-gl": "^0.53.1",
     "moment": "^2.24.0",
     "proj4leaflet": "^1.0.2",
@@ -39,6 +41,7 @@
     "react-leaflet-curve": "^1.0.0",
     "react-leaflet-heatmap-layer": "^2.0.0",
     "react-scripts": "2.1.8",
+    "react-time-picker": "^3.5.2",
     "reactstrap": "^8.0.0"
   },
   "scripts": {

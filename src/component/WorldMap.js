@@ -55,7 +55,7 @@ class WorldMap extends Component {
         global.detailView = [];
     };
     drawGrid = (map) => {
-        console.log("drawGrid");
+        // console.log("drawGrid");
         let left = 119.963804; //new
         let right = 120.437324;
         let bottom = 30.132932;
@@ -76,7 +76,7 @@ class WorldMap extends Component {
             d3.json("./RP.json"), axios.get(global.server + '/vis1/od_aster'),
             axios.get(global.server + '/vis1/poi_total', {params})
         ]).then(([data, asterData, poiData]) => {
-            console.log(asterData);
+            // console.log(asterData);
             let type = [data.P0, data.P1, data.P2, data.P3,data.P4];
             let key = ['P0', 'P1', 'P2', 'P3','P4'];
 
@@ -157,8 +157,8 @@ class WorldMap extends Component {
                         let fillOpacity =  flowSum()/2000+0.1;
                         if(fillOpacity <  0)fillOpacity = 0;
                         else if(fillOpacity>1) fillOpacity = 1;
-                        console.log(flowSum());
-                        console.log(fillOpacity);
+                        // console.log(flowSum());
+                        // console.log(fillOpacity);
                         let c1 = L.circle([cx, cy], {
                             radius: outR, color: incolor, opacity: 0.78, fill: true, fillOpacity:
                             fillOpacity
@@ -349,7 +349,7 @@ class WorldMap extends Component {
 
     };
     handleDialogClose = () => {
-        console.log("close");
+        // console.log("close");
         this.setState({
             showCheckDetailView:false
         })

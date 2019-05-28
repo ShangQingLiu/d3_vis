@@ -2,9 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -14,22 +11,6 @@ import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {iconName,POIMap} from "../constants/constant";
 
-const options = [
-    'None',
-    'Atria',
-    'Callisto',
-    'Dione',
-    'Ganymede',
-    'Hangouts Call',
-    'Luna',
-    'Oberon',
-    'Phobos',
-    'Pyxis',
-    'Sedna',
-    'Titania',
-    'Triton',
-    'Umbriel',
-];
 
 class POIChooseDialogRaw extends React.Component {
     constructor(props) {
@@ -53,7 +34,7 @@ class POIChooseDialogRaw extends React.Component {
 
     handleOk = () => {
         this.props.onClose();
-        this.props.toPOIHeatMap(this.state.selectedValue)
+        this.props.topoiheatmap(this.state.selectedValue)
     };
 
     handleChange = (event, value) => {
@@ -123,21 +104,21 @@ const styles = theme => ({
 });
 
 class POIChooseDialog extends React.Component {
-    constructor(props){
-       super(props)
-    }
+    // constructor(props){
+    //    super(props)
+    // }
     state = {
         open: false,
         value: 'Dione',
     };
 
-    handleClickListItem = () => {
-        this.setState({ open: true });
-    };
-
-    handleClose = value => {
-        this.setState({ value, open: false });
-    };
+    // handleClickListItem = () => {
+    //     this.setState({ open: true });
+    // };
+    //
+    // handleClose = value => {
+    //     this.setState({ value, open: false });
+    // };
 
     render() {
         const { classes } = this.props;
@@ -150,7 +131,7 @@ class POIChooseDialog extends React.Component {
                         open={this.props.open}
                         onClose={this.props.close}
                         value={this.state.value}
-                        toPOIHeatMap={this.props.toPOIHeatMap}
+                        topoiheatmap={this.props.topoiheatmap}
                     />
             </div>
         );

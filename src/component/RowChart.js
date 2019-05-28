@@ -131,7 +131,7 @@ class RowChart extends Component {
                             .attr("width", 79)
                             .attr("height", 40)
                             .attr("vertical-align","bottom")
-                        td .append("svg")
+                            td.append("svg")
                             .attr("width", 10)
                             .attr("height", 10)
                             .attr("float","left")

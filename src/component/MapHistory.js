@@ -8,9 +8,9 @@ import 'leaflet/dist/leaflet.css'
 
 const center=[30.27, 120.2];
 class MapHistory extends Component{
-    constructor(props){
-        super(props)
-    }
+    // constructor(props){
+    //     super(props)
+    // }
 
     render(){
         return(
