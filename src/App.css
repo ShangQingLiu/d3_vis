@@ -1,9 +1,9 @@
 #map{
   padding: 0;
   margin: 0;
-  width:80rem;
+  width:68rem;
   padding-left:2rem;
-  height:670px;
+  height:640px;
 }
 .leaflet-container{
   width:80rem;

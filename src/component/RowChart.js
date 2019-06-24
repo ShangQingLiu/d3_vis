@@ -30,11 +30,11 @@ class RowChart extends Component {
         ]).then((inputData) => {
             var myrootDom = d3.select(this.rc0.current);
             var mysvg = myrootDom.append("svg")
-                .attr("width", 1400)
-                .attr("height", 310);
+                .attr("width", 894)
+                .attr("height", 250);
             let foreignObject = mysvg.append("foreignObject")
-                .attr("width", 1400)
-                .attr("height", 310);
+                .attr("width", 894)
+                .attr("height", 250);
             let table = foreignObject.append("xhtml:body")
                 .append("table")
                 .attr("text-align","center")
@@ -71,7 +71,7 @@ class RowChart extends Component {
                     })
                     .attr("display", "block")
                     .attr("width", 30)
-                    .attr("height", 30);
+                    .attr("height", 20);
                 th.append("p")
                     .text(POIMap[i].replace(/_/g," "))
                     .attr("font-size",1)
@@ -128,8 +128,8 @@ class RowChart extends Component {
                 for (let j = 0; j < 10; j++) {
                     if (j === 0) {
                         let td = tr2.append("td")
-                            .attr("width", 79)
-                            .attr("height", 40)
+                            .attr("width", 93)
+                            .attr("height", 34)
                             .attr("vertical-align","bottom")
                             td.append("svg")
                             .attr("width", 10)
@@ -145,7 +145,7 @@ class RowChart extends Component {
                             .text(function(){
                              return    "Function#" + (i + 1).toString()
                             })
-                            .attr("width", "40px")
+                            .attr("width", 50)
                             .attr("font-size", "10px")
                             .attr("style","color:black,width:40px,height:40px")
                             .attr("font-weight","bold")
@@ -156,14 +156,14 @@ class RowChart extends Component {
                             .attr("text-align","left")
                             .append("svg")
                             .attr("width", 85)
-                            .attr("height", 40)
+                            .attr("height", 20)
                             .append("rect")
                             .attr("class","poiRect"+i.toString())
                             .attr("width", function () {
                                 // console.log(node.children[j - 1].value)
                                 return xScale(node.children[j - 1].value)
                             })
-                            .attr("height", 40)
+                            .attr("height", 20)
                             .attr("fill",function () {
                                 return d3.schemeCategory10[i]
                             } );

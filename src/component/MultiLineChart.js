@@ -10,7 +10,7 @@ class MultiLineChart extends Component {
     }
 
     componentDidMount() {
-        let height = 250;
+        let height = 200;
         let width = 500;
         let margin = ({top: 20, right: 20, bottom: 20, left: 55});
         let param={
@@ -32,7 +32,7 @@ class MultiLineChart extends Component {
                     if(item instanceof Array){ return 0;
                     }
                     else{
-                        let arr = [parseFloat(item["P0"]),parseFloat(item["P1"]),parseFloat(item["P2"]),parseFloat(item["P3"]),parseFloat(item["P4"])]
+                        let arr = [parseFloat(item["P0"]),parseFloat(item["P1"]),parseFloat(item["P2"]),parseFloat(item["P3"]),parseFloat(item["P4"])];
                         return d3.max(arr);
                     }
                 }))[1]])
@@ -100,7 +100,7 @@ class MultiLineChart extends Component {
                            .attr("x",d3.mouse(this)[0]+4)
                            .attr("y",d3.mouse(this)[1]-4)
                            .text(function(d){
-                             return  yScale.invert(d3.mouse(this)[1])
+                             return  parseInt(yScale.invert(d3.mouse(this)[1])).toString();
                            })
                     });
                     dot.on("mouseleave",function () {
@@ -108,12 +108,12 @@ class MultiLineChart extends Component {
                            .attr("display","none")
                     })
                 }
-                svg.call(hover,lines)
+                svg.call(hover,lines);
                return 0;
             });
             function hover(svg,path) {
                 if ("ontouchstart" in document)path
-                    .style("-webkit-tap-highlight-color", "transparent")
+                    .style("-webkit-tap-highlight-color", "transparent");
                     // .on("touchmove", moved);
                     // .on("touchstart", entered)
                     // .on("touchend", left)
@@ -136,25 +136,25 @@ class MultiLineChart extends Component {
                 //    dot.select("text").text("name");
                 // }
                 function entered() {
-                    dot.attr("transform",function (d,i) {
-                        // console.log(d3.mouse(this),d3.event.pageY)
-                        // console.log(this)
-                        // console.log("enter",(d3.mouse(this)[0]));
-                        return `translate(${d3.mouse(this)[0]},${d3.mouse(this)[1]})`
-                    });
-                    dot.select("circle")
-                        .attr("r",2)
-                        .attr("cx",5)
-                        .attr("cy",10)
-                        .attr("stroke","black")
-                        .attr("stroke-width",1)
-                        .attr("fill","none");
-                    dot.select("text").text(yScale.invert(d3.mouse(this)[1]));
-                    dot.attr("display",null);
+                    // dot.attr("transform",function (d,i) {
+                    //     // console.log(d3.mouse(this),d3.event.pageY)
+                    //     // console.log(this)
+                    //     // console.log("enter",(d3.mouse(this)[0]));
+                    //     return `translate(${d3.mouse(this)[0]},${d3.mouse(this)[1]})`
+                    // });
+                    // dot.select("circle")
+                    //     .attr("r",2)
+                    //     .attr("cx",5)
+                    //     .attr("cy",10)
+                    //     .attr("stroke","black")
+                    //     .attr("stroke-width",1)
+                    //     .attr("fill","none");
+                    // dot.select("text").text(yScale.invert(d3.mouse(this)[1]));
+                    // dot.attr("display",null);
                 }
                 function left(){
-                    dot.attr("display","none")
-                    .attr("transform",null)
+                    // dot.attr("display","none")
+                    // .attr("transform",null)
                 }
             }
         });
@@ -167,12 +167,14 @@ class MultiLineChart extends Component {
     }
     redraw(){
         //TODO: this chould only use for single rectangle
-        let height = 250;
+        let height = 200;
         let width = 500;
         let margin = ({top: 20, right: 20, bottom: 20, left: 55});
+        console.log("selectGroups",global.selectGroups);
         let recs = Object.values(global.selectGroups._layers);
-        let p2 = recs[0]._latlngs[0][1];
-        let p4 = recs[0]._latlngs[0][3];
+
+        let p2 = recs[Object.keys(global.selectGroups._layers).length-1]._latlngs[0][1];
+        let p4 = recs[Object.keys(global.selectGroups._layers).length-1]._latlngs[0][3];
         let arr = p2.lat.toString()+','+p2.lng.toString()
             +','+p4.lat.toString()+','+p4.lng.toString();
         let params = {
@@ -217,17 +219,17 @@ class MultiLineChart extends Component {
                             return line(d)
                         }),
                     update=>update
-                        .attr("stroke","purple")
+                        .attr("stroke","#ffbccf")
                         .attr("d",function (d) {
                            return line(d)
                         })
                         .on("mouseover", function (d,i) {
-                            d3.select(this)
-                                .attr("stroke","yellow")
+                            // d3.select(this)
+                                // .attr("stroke","yellow")
                         })
                         .on("mouseout",function () {
-                           d3.select(this)
-                               .attr("stroke","purple")
+                           // d3.select(this)
+                           //     .attr("stroke","purple")
                         })
                     ,
                     exit=>exit.attr("stroke","brown")
@@ -273,7 +275,7 @@ class MultiLineChart extends Component {
                         .attr("x",d3.mouse(this)[0]+4)
                         .attr("y",d3.mouse(this)[1]-4)
                         .text(function(d){
-                            return  yScale.invert(d3.mouse(this)[1])
+                            return  parseInt(yScale.invert(d3.mouse(this)[1])).toString();
                         })
                 });
                 dot.on("mouseleave",function () {

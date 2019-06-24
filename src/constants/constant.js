@@ -57,6 +57,9 @@ export const global = {
     fakeIndex:0,
 
     mapSnapshot:[],
+
+    //trafficFlowMap Markers
+    markers:[],
 };
 
 export const POIColorArray = ["#2EA64C", "#A9D381", "#F0989A", "#F9C17C", "#F7944C", "#CBB0D3", "#ACCFE1", "#5D4581", "#AC5B2F"];

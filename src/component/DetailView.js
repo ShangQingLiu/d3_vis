@@ -14,7 +14,7 @@ class DetailView extends Component {
 
     draw = (centerColorIndex, arcData1, arcData2, POIData) => {
         let width = 240;
-        let height = 300;
+        let height = 240;
         let svg = d3.select(this.glyph.current)
             .append("svg")
             .attr("width", width)
@@ -161,7 +161,7 @@ class DetailView extends Component {
             .attr("cy", height / 2)
         svg.append("rect")
             .attr('width', width)
-            .attr('height', height - 10)
+            .attr('height', height)
             .attr("fill", "none")
             .attr("stroke", "black")
         let rScale = d3.scaleLinear()

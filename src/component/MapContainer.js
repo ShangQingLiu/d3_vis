@@ -3,6 +3,9 @@ import L from 'leaflet';
 import WorldMap from "./WorldMap";
 import axios from 'axios';
 import {global, POIMap, POIColorArray} from "../constants/constant";
+//material-ui
+import {makeStyles} from '@material-ui/core/styles'
+import  CircularProgress from '@material-ui/core/CircularProgress'
 //react-bootstrap
 import Card from "react-bootstrap/Card"
 import DropdownButton from 'react-bootstrap/DropdownButton'
@@ -14,6 +17,8 @@ import POIHeatMap from "../component/POIHeatMap"
 import POIChooseDialog from "../component/POIChooseDialog"
 import MultiLineChart from "../component/MultiLineChart"
 import RowChart from "../component/RowChart"
+import DetailView from "./DetailView";
+import HeatMapTimePicker from "../HeatMapTimePicker";
 // import DetaiView from "../component/DetailView"
 import Glyph from '../component/Glyph'
 import '../css/MapContainer.css'
@@ -31,14 +36,16 @@ import {
     faSave, faAngleDoubleLeft, faAngleDoubleRight, faArrowAltCircleLeft,
     faPlus
 } from '@fortawesome/free-solid-svg-icons'
-import DetailView from "./DetailView";
-import HeatMapTimePicker from "../HeatMapTimePicker";
+//test gpx
+import * as LeafletGPX from 'leaflet-gpx/gpx';
+
 
 library.add(faSave);
 library.add(faAngleDoubleLeft);
 library.add(faAngleDoubleRight);
 library.add(faArrowAltCircleLeft);
 library.add(faPlus);
+
 
 class MapContainer extends Component {
     constructor(props) {
@@ -66,7 +73,7 @@ class MapContainer extends Component {
             recBound2DetailView: '',
             addHistory: false,
             setStartDestination:false,
-
+            circularProgressOn:false,
         };
     }
 
@@ -1030,6 +1037,13 @@ class MapContainer extends Component {
     setStartDestination=()=>{
      this.setState({setStartDestination:true})
     };
+
+    POIHeatMap2Circular=()=>{
+        this.setState((state)=>({
+            circularProgressOn:!state.circularProgressOn
+        }))
+    };
+
     //Life cycle
     ///////////
     //Deprecate
@@ -1085,11 +1099,16 @@ class MapContainer extends Component {
     // };
 
     componentDidMount() {
-        this.historyDraw(0)
+        this.historyDraw(0);
         this.drawGrid(global.history[0]["map"], global.curveGroup0, global.curveGroups0, global.innerCircleGroup0, global.innerCircleGroups0, global.POIGroup0, global.POIGroups0, 0);
-        this.historyDraw(1)
+        this.historyDraw(1);
         this.drawGrid(global.history[1]["map"], global.curveGroup1, global.curveGroups1, global.innerCircleGroup1, global.innerCircleGroups1, global.POIGroup1, global.POIGroups1, 1);
-        this.historyDraw(2)
+        this.historyDraw(2);
+        //gpx
+        // let gpx = './test.gpx';
+        // new L.GPX(gpx,{async:true}).on('loaded',function (e) {
+        //     global.history[2]["map"].fitBounds(e.target.getBounds());
+        // }).addTo(global.history[2]["map"]);
         this.drawGrid(global.history[2]["map"], global.curveGroup2, global.curveGroups2, global.innerCircleGroup2, global.innerCircleGroups2, global.POIGroup2, global.POIGroups2, 2)
     }
 
@@ -1155,7 +1174,7 @@ class MapContainer extends Component {
         return (
             <div>
                 <div style={{float: "left"}}>
-                    <Card style={{width: '15.5rem', height: '44.8rem'}}>
+                    <Card style={{width: '15.5rem', height: '42.8rem'}}>
                         <Card.Header as="h6" style={{height: "44px"}}>Data Overview</Card.Header>
                         <div className="sigma-content">
                             <div className="sigma-middle-line">
@@ -1245,11 +1264,11 @@ class MapContainer extends Component {
                         {/*<Button varient="primary" size="sm" onClick={this.handleDrawPoly}>draw polygon</Button>*/}
                         {/*<Button varient="primary" size="sm" onClick={this.handleDrawRec}>draw rectangle</Button>*/}
                         {/*<Button varient="primary" size="sm" onClick={this.handleCleanSelection}>clean selection</Button>*/}
-                        <Glyph/>
+                        {/*<Glyph/>*/}
                     </Card>
                 </div>
                 <div>
-                    <Card style={{float: "left", width: '80rem', height: '716.8px', marginLeft: '1px'}}>
+                    <Card style={{float: "left", width: '68rem', height: '41.8rem', marginLeft: '1px'}}>
                         <Card.Header as="h6" style={{height: "44px", float: "left"}}>
                             <div style={{float: "left"}}>
                                 <span style={{float: "left", marginRight: "10px"}}>Global Map View</span>
@@ -1266,7 +1285,7 @@ class MapContainer extends Component {
                                     <Dropdown.Item href="#/action-2">Traffic Flow</Dropdown.Item>
                                 </DropdownButton>
                                 <POIChooseDialog open={this.state.POIChooseClose} close={this.handlePOIChooseClose}
-                                                 topoiheatmap={this.POIChooseDialog2POIHeatMap}/>
+                                                 topoiheatmap={this.POIChooseDialog2POIHeatMap} />
                             </div>
                             {/*<FontAwesomeIcon title="to save" icon="save" border pull="right" onClick={this.handleSave}/>*/}
                             {this.state.HeatMapMode &&
@@ -1278,6 +1297,8 @@ class MapContainer extends Component {
                                            onClick={this.setStartDestination}/>
                                     <span>specify starting point and destination</span>
                                 </label>
+                                {this.state.circularProgressOn&& <CircularProgress size={20}/>}
+
                                 <FontAwesomeIcon title="Go back to Main Page" icon={faArrowAltCircleLeft} border
                                                  pull="right" onClick={this.closeHeatMapMode}/>
                             </div>
@@ -1288,36 +1309,36 @@ class MapContainer extends Component {
                             {!this.state.HeatMapMode &&
                             <WorldMap redraw={this.state.redraw} sendDetailViewMessage={this.worldMap2DetailView}/>}
                             {this.state.HeatMapMode &&
-                            <POIHeatMap setStartDestination={this.state.setStartDestination} mode={this.state.HeatMapModes} frompoichoosedialog={this.state.POIChooseDialog2POIHeatMapMsg}/>}
+                            <POIHeatMap  poiheatmap2circular={this.POIHeatMap2Circular} setStartDestination={this.state.setStartDestination} mode={this.state.HeatMapModes} frompoichoosedialog={this.state.POIChooseDialog2POIHeatMapMsg}/>}
 
                             {/*<div id="historyLog" ref={this.historyLog} style={{width:157,height:665,float:"left"}}>*/}
                             {/*</div>*/}
                         </div>
                     </Card>
 
-                    <Card style={{float: "left", width: '24rem', height: '716.8px', marginLeft: '1px'}}>
+                    <Card style={{float: "left", width: '24.5rem', height: '42.8rem', marginLeft: '1px'}}>
                         <Card.Header as="h6" style={{height: "44px"}}>Snapshot Panel
                             <FontAwesomeIcon title="Add" icon={faPlus}
                                              pull="right" onClick={this.addHistory}/>
                         </Card.Header>
-                        <Card style={{float: "left", width: '23.8rem', height: '167px'}}>
-                            <div id={"hmap0"} style={{height: 168, width: '23.8rem'}}></div>
+                        <Card style={{float: "left", width: '24.5rem', height: '10rem'}}>
+                            <div id={"hmap0"} style={{height: 168, width: '24.5rem'}}></div>
                         </Card>
-                        <Card style={{float: "left", width: '23.8rem', height: '167px'}}>
-                            <div id={"hmap1"} style={{height: 168, width: '23.8rem'}}></div>
+                        <Card style={{float: "left", width: '24.5rem', height: '10rem'}}>
+                            <div id={"hmap1"} style={{height: 168, width: '24.5rem'}}></div>
                         </Card>
-                        <Card style={{float: "left", width: '23.8rem', height: '167px'}}>
-                            <div id={"hmap2"} style={{height: 168, width: '23.8rem'}}></div>
+                        <Card style={{float: "left", width: '24.5rem', height: '10rem'}}>
+                            <div id={"hmap2"} style={{height: 168, width: '24.5rem'}}></div>
                         </Card>
                         <MapHistory/>
                     </Card>
                 </div>
                 <div>
-                    <Card style={{float: "left", width: '54rem', height: '350px'}}>
+                    <Card style={{float: "left", width: '55rem', height: '295px'}}>
                         <Card.Header as="h6" style={{height: "44px"}}>Hierarchical Bar Chart</Card.Header>
                         <RowChart redraw={this.state.redraw} passTop3POI={this.getTop3POI}/>
                     </Card>
-                    <Card style={{float: "left", width: '36rem', height: '350px'}}>
+                    <Card style={{float: "left", width: '36rem', height: '295px'}}>
                         <Card.Header as="h6" style={{height: "44px"}}>Multi-line Chart
                             <Button variant="light" size="sm"
                                     style={{marginRight: "5px", marginLeft: "10px"}}>All</Button>
@@ -1330,7 +1351,7 @@ class MapContainer extends Component {
                         </Card.Header>
                         <MultiLineChart redraw={this.state.redraw} passLineData={this.getLineData}/>
                     </Card>
-                    <Card style={{float: "left", width: '30rem', height: '350px'}}>
+                    <Card style={{float: "left", width: '17rem', height: '295px'}}>
                         <Card.Header as="h6" style={{height: "44px"}}>Detail View
                             {/*<FontAwesomeIcon title="next" icon={faAngleDoubleRight} border pull="right" />*/}
                             {/*<FontAwesomeIcon title="previous" icon={faAngleDoubleLeft} border pull="right" />*/}
