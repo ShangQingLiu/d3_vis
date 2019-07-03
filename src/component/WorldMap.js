@@ -409,11 +409,41 @@ class WorldMap extends Component {
             currentResult.push(lb.y + Math.random()*yRange);
             resultRandomPoints.push(currentResult);
         }
-        console.log(resultRandomPoints);
+        // console.log(resultRandomPoints);
        /////////////////////////////////////////////////////////
        //get voronoi result from this 200 points
-       //  voronoi = d3.voronoi().extent()
+        //TODO:fix null of recBoundMouse2WorldMapVoronoiFn
+        console.log(this.props.recBoundMouse2WorldMapVoronoiFn);
+        let xLength = Math.abs(
+            this.props.recBoundMouse2WorldMapVoronoiFn[0][0]-this.props.recBoundMouse2WorldMapVoronoiFn[1][0]
+            );
+        let yLength = Math.abs(
+            this.props.recBoundMouse2WorldMapVoronoiFn[0][1]-this.props.recBoundMouse2WorldMapVoronoiFn[1][1],
+        );
 
+        d3.select(global.map.getPanes().overlayPane).select('svg').remove();
+        let svg = d3.select(global.map.getPanes().overlayPane).append('svg'),
+            g = svg.append('g').attr('class', 'leaflet-zoom-hide');
+        svg.attr("width", 1104)
+            .attr("height", 350);
+        let path = svg.append("g")
+            .selectAll("path");
+        let voronoi = d3.voronoi().extent([[0, 0], [xLength, yLength]])
+            .x(function (p) {
+                return p[0]
+            })
+            .y(function (p) {
+                return p[1]
+            });
+        let voronoiP = path.data(voronoi.polygons(resultRandomPoints)).enter().append("path");
+        voronoiP.attr("stroke", "black")
+            .attr("fill", "none")
+            // .attr("d", function(d) { return "M" + d.join("L") + "Z" } );
+            .attr("d", polygon);
+
+        function polygon(d) {
+            return "M" + d.join("L") + "Z";
+        }
     }
     ;
 

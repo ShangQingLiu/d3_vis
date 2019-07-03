@@ -75,6 +75,7 @@ class MapContainer extends Component {
             setStartDestination:false,
             circularProgressOn:false,
             recBound2WorldMapVoronoiFn:'',
+            recBoundMouse2WorldMapVoronoiFn:'',
         };
     }
 
@@ -186,6 +187,7 @@ class MapContainer extends Component {
             let rectangle;
             let tmprect;
             const latlngs = [];
+            let mouseLatLng=[];
             global.map.on('mousedown', mouseDown);    //点击地图
             global.map.on('mouseup', mouseUp.bind(this));
 
@@ -196,6 +198,8 @@ class MapContainer extends Component {
                 }
                 //左上角坐标
                 latlngs[0] = [e.latlng.lat, e.latlng.lng];
+                //屬標座標存取
+                mouseLatLng[0] = [e.originalEvent.pageX,e.originalEvent.pageY];
                 //开始绘制，监听鼠标移动事件
                 global.map.on('mousemove', onMove)
             }
@@ -212,10 +216,13 @@ class MapContainer extends Component {
 
             function mouseUp(e) {
                 //矩形绘制完成，移除临时矩形，并停止监听鼠标移动事件
+                console.log(e);
                 tmprect.remove();
                 global.map.off('mousemove');
                 //右下角坐标
                 latlngs[1] = [e.latlng.lat, e.latlng.lng];
+                //屬標座標存取
+                mouseLatLng[1] = [e.originalEvent.pageX,e.originalEvent.pageY];
                 // var bounds = L.bounds(latlngs[0],latlngs[1]);
                 rectangle = L.rectangle(latlngs, {
                     color: '#3300ff',
@@ -237,6 +244,7 @@ class MapContainer extends Component {
                     redraw: !state.redraw,
                     recBound2DetailView: sendBound,
                     recBound2WorldMapVoronoiFn:sendBound,
+                    recBoundMouse2WorldMapVoronoiFn:mouseLatLng,
                 }));
                 //调整view范围
                 // global.map.fitBounds(latlngs);
@@ -1301,7 +1309,7 @@ class MapContainer extends Component {
                         </Card.Header>
                         <div>
                             {!this.state.HeatMapMode &&
-                            <WorldMap recBound2WorldMapVoronoiFn = {this.state.recBound2WorldMapVoronoiFn} redraw={this.state.redraw} sendDetailViewMessage={this.worldMap2DetailView}/>}
+                            <WorldMap recBoundMouse2WorldMapVoronoiFn = {this.state.recBoundMouse2WorldMapVoronoiFn} recBound2WorldMapVoronoiFn = {this.state.recBound2WorldMapVoronoiFn} redraw={this.state.redraw} sendDetailViewMessage={this.worldMap2DetailView}/>}
                             {this.state.HeatMapMode &&
                             <POIHeatMap  poiheatmap2circular={this.POIHeatMap2Circular} setStartDestination={this.state.setStartDestination} mode={this.state.HeatMapModes} frompoichoosedialog={this.state.POIChooseDialog2POIHeatMapMsg}/>}
 
