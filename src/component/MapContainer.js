@@ -74,6 +74,7 @@ class MapContainer extends Component {
             addHistory: false,
             setStartDestination:false,
             circularProgressOn:false,
+            recBound2WorldMapVoronoiFn:'',
         };
     }
 
@@ -174,6 +175,7 @@ class MapContainer extends Component {
         }));
     };
     handleDrawRec = () => {
+        //remove select the rectangle option
         if (global.map.listens('mousedown')) {
             global.map.off('mousedown');    //点击地图
             global.map.off('mouseup');
@@ -193,14 +195,13 @@ class MapContainer extends Component {
                     tmprect.remove()
                 }
                 //左上角坐标
-                latlngs[0] = [e.latlng.lat, e.latlng.lng]
+                latlngs[0] = [e.latlng.lat, e.latlng.lng];
                 //开始绘制，监听鼠标移动事件
                 global.map.on('mousemove', onMove)
-
             }
 
             function onMove(e) {
-                latlngs[1] = [e.latlng.lat, e.latlng.lng]
+                latlngs[1] = [e.latlng.lat, e.latlng.lng];
                 //删除临时矩形
                 if (typeof tmprect !== 'undefined') {
                     tmprect.remove()
@@ -221,13 +222,13 @@ class MapContainer extends Component {
                     fillOpacity: 0,
                     weight: 2
                 });
-                rectangle.on('dblclick', function () {
-                    let id = L.stamp(rectangle);
-                    this.setState(state => ({
-                        saveCount: state.saveCount + 1,
-                        saveStamp: id
-                    }))
-                }.bind(this));
+                // rectangle.on('dblclick', function () {
+                //     let id = L.stamp(rectangle);
+                //     this.setState(state => ({
+                //         saveCount: state.saveCount + 1,
+                //         saveStamp: id
+                //     }))
+                // }.bind(this));
                 global.selectGroup.push(rectangle);
                 global.selectGroups = L.layerGroup(global.selectGroup);
                 global.map.addLayer(global.selectGroups);
@@ -235,6 +236,7 @@ class MapContainer extends Component {
                 this.setState(state => ({
                     redraw: !state.redraw,
                     recBound2DetailView: sendBound,
+                    recBound2WorldMapVoronoiFn:sendBound,
                 }));
                 //调整view范围
                 // global.map.fitBounds(latlngs);
@@ -242,14 +244,11 @@ class MapContainer extends Component {
         }
         this.setState(state => ({
             drawRectOn: !state.drawRectOn
-
         }));
     };
     handledbClick = () => {
 
     };
-
-
     handleCleanSelection = () => {
         global.selectGroups.clearLayers();
         global.selectGroup = [];
@@ -280,7 +279,6 @@ class MapContainer extends Component {
             lineData: m
         })
     };
-
     historyDraw(saveCount) {
         let mapId = 'hmap' + saveCount.toString();
         // console.log("mapid", mapId);
@@ -292,7 +290,6 @@ class MapContainer extends Component {
             // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         }).addTo(global.history[saveCount]["map"]);
     }
-
     drawGrid(map, curveGroup, curveGroups, innerCircleGroup, innerCircleGroups, POIGroup, POIGroups, fValue) {
         function describeArc(lng, lat, innerRadius, outerRadius, startAngle, endAngle, value) {
             let innerTest = 0.0017884;
@@ -988,7 +985,6 @@ class MapContainer extends Component {
             });
         }
     }
-
     worldMap2DetailView = () => {
         this.setState((state) => (
             {
@@ -1033,11 +1029,9 @@ class MapContainer extends Component {
             console.log("test",data);
         })
     };
-
     setStartDestination=()=>{
      this.setState({setStartDestination:true})
     };
-
     POIHeatMap2Circular=()=>{
         this.setState((state)=>({
             circularProgressOn:!state.circularProgressOn
@@ -1307,7 +1301,7 @@ class MapContainer extends Component {
                         </Card.Header>
                         <div>
                             {!this.state.HeatMapMode &&
-                            <WorldMap redraw={this.state.redraw} sendDetailViewMessage={this.worldMap2DetailView}/>}
+                            <WorldMap recBound2WorldMapVoronoiFn = {this.state.recBound2WorldMapVoronoiFn} redraw={this.state.redraw} sendDetailViewMessage={this.worldMap2DetailView}/>}
                             {this.state.HeatMapMode &&
                             <POIHeatMap  poiheatmap2circular={this.POIHeatMap2Circular} setStartDestination={this.state.setStartDestination} mode={this.state.HeatMapModes} frompoichoosedialog={this.state.POIChooseDialog2POIHeatMapMsg}/>}
 

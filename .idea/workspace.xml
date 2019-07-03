@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="cb5c83e7-d6f1-489d-b05e-c659efb9f354" name="Default" comment="kkkkkkkkkkkkkkkkkk">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/DetailView.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/DetailView.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/MapContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/MapContainer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/MultiLineChart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/MultiLineChart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/WorldMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/WorldMap.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -14,6 +17,30 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DockManager">
+    <window id="1">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file leaf-file-name="WorldMap - 複製.js" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/src/component/deprecate/WorldMap - 複製.js">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="187">
+                    <caret line="466" selection-start-line="466" selection-end-line="466" />
+                    <folding>
+                      <element signature="e#0#39#0" expanded="true" />
+                      <element signature="n#!!block;n#componentDidMount#0;n#WorldMap#0" />
+                      <element signature="n#!!block;n#insideRec#0;n#WorldMap#0" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
+  </component>
   <component name="FavoritesManager">
     <favorites_list name="d3_vis" />
   </component>
@@ -22,15 +49,63 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/component/MapContainer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="1298" column="39" selection-start-line="1298" selection-start-column="39" selection-end-line="1298" selection-end-column="39" />
+            <state relative-caret-position="230">
+              <caret line="1040" column="4" lean-forward="true" selection-start-line="1040" selection-start-column="4" selection-end-line="1040" selection-end-column="4" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
+                <element signature="e#2607#2640#0" />
+                <element signature="e#2671#4068#0" />
+                <element signature="e#4097#5779#0" />
+                <element signature="e#8460#8468#0" />
+                <element signature="e#8505#8588#0" />
+                <element signature="e#8617#8706#0" />
+                <element signature="e#8731#8836#0" />
+                <element signature="e#8878#8991#0" />
+                <element signature="e#9017#9082#0" />
+                <element signature="e#9109#9175#0" />
                 <element signature="n#!!block;n#historyDraw#0;n#MapContainer#0" />
-                <element signature="n#!!block;n#drawGrid#0;n#MapContainer#0" />
+                <element signature="e#50832#50970#0" />
+                <element signature="e#51053#51129#0" />
+                <element signature="e#51175#51293#0" />
+                <element signature="e#51337#51523#0" />
+                <element signature="e#51554#51628#0" />
+                <element signature="e#51653#51771#0" />
+                <element signature="e#51796#51958#0" />
+                <element signature="e#52191#52203#0" />
                 <element signature="n#!!block;n#componentDidMount#0;n#MapContainer#0" />
                 <element signature="n#!!block;n#componentWillUpdate#0;n#MapContainer#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WorldMap.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/component/WorldMap.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="322">
+              <caret line="414" column="8" selection-start-line="414" selection-start-column="8" selection-end-line="414" selection-end-column="8" />
+              <folding>
+                <element signature="e#0#39#0" expanded="true" />
+                <element signature="e#254#299#0" expanded="true" />
+                <element signature="e#1296#1578#0" />
+                <element signature="e#1635#1692#0" />
+                <element signature="e#1773#1944#0" />
+                <element signature="e#1970#14869#0" />
+                <element signature="e#2709#14861#0" />
+                <element signature="e#14957#16811#0" />
+                <element signature="e#16844#17275#0" />
+                <element signature="e#17307#17420#0" />
+                <element signature="e#17446#17835#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DetailView.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/component/DetailView.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="345">
+              <caret line="18" selection-start-line="18" selection-end-line="18" />
             </state>
           </provider>
         </entry>
@@ -67,7 +142,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/public/morley.csv" />
         <option value="$PROJECT_DIR$/public/test.html" />
         <option value="Z:/4tDrive/2019chinavis/system/function_districts.html" />
         <option value="$PROJECT_DIR$/src/component/rc0.js" />
@@ -100,7 +174,6 @@
         <option value="$PROJECT_DIR$/public/travel.svg" />
         <option value="$PROJECT_DIR$/public/RP.json" />
         <option value="$PROJECT_DIR$/public/splitResult/RP.json" />
-        <option value="$PROJECT_DIR$/src/component/WorldMap.js" />
         <option value="$PROJECT_DIR$/src/component/deprecate/POIHeatMap.js" />
         <option value="$PROJECT_DIR$/src/component/deprecate/POIHeatMap - 複製.js" />
         <option value="$PROJECT_DIR$/src/component/Glyph.js" />
@@ -112,20 +185,38 @@
         <option value="$PROJECT_DIR$/src/HeatMapTimePicker.js" />
         <option value="$PROJECT_DIR$/src/component/RowChart.js" />
         <option value="$PROJECT_DIR$/src/component/MapHistory.js" />
-        <option value="$PROJECT_DIR$/src/component/DetailView.js" />
         <option value="$PROJECT_DIR$/src/App.css" />
-        <option value="$PROJECT_DIR$/src/component/MultiLineChart.js" />
         <option value="$PROJECT_DIR$/src/constants/constant.js" />
-        <option value="$PROJECT_DIR$/src/component/MapContainer.js" />
         <option value="$PROJECT_DIR$/src/component/POIHeatMap.js" />
+        <option value="$PROJECT_DIR$/src/component/DetailView.js" />
+        <option value="$PROJECT_DIR$/src/component/VoronoiFn.js" />
+        <option value="$PROJECT_DIR$/src/component/MapContainer.js" />
+        <option value="$PROJECT_DIR$/src/component/MultiLineChart.js" />
+        <option value="$PROJECT_DIR$/src/component/WorldMap.js" />
       </list>
     </option>
   </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER">
+    <package-json value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/node_modules" />
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths>
+      <path value="$PROJECT_DIR$/package.json" />
+    </packageJsonPaths>
+  </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-15" />
-    <option name="y" value="39" />
-    <option name="width" value="1944" />
-    <option name="height" value="1065" />
+    <option name="x" value="-17" />
+    <option name="y" value="28" />
+    <option name="width" value="2913" />
+    <option name="height" value="1608" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -133,17 +224,13 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="d3_vis" type="b2602c69:ProjectViewProjectNode" />
               <item name="d3_vis" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="d3_vis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="d3_vis" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="d3_vis" type="b2602c69:ProjectViewProjectNode" />
@@ -160,13 +247,19 @@
               <item name="d3_vis" type="b2602c69:ProjectViewProjectNode" />
               <item name="d3_vis" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="component" type="462c0819:PsiDirectoryNode" />
+              <item name="deprecate" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="d3_vis" type="b2602c69:ProjectViewProjectNode" />
+              <item name="d3_vis" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="constants" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -325,12 +418,13 @@
       <workItem from="1559294810129" duration="3612000" />
       <workItem from="1559568298825" duration="22013000" />
       <workItem from="1559631300865" duration="1689000" />
-      <workItem from="1562171712996" duration="350000" />
+      <workItem from="1561347450068" duration="9061000" />
+      <workItem from="1561612324131" duration="11267000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="700503000" />
+    <option name="totallyTimeSpent" value="720481000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -342,34 +436,150 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1295" height="735" extended-state="6" />
+    <frame x="-7" y="23" width="1295" height="704" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4986088" visible="true" weight="0.11437649" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.24941361" />
-      <window_info id="npm" order="2" side_tool="true" />
-      <window_info id="Favorites" order="3" sideWeight="0.50139123" side_tool="true" weight="0.1625709" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32888147" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32427844" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.32888147" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.32627866" />
+      <window_info id="npm" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.36615732" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4986088" weight="0.33081284" />
+      <window_info anchor="bottom" id="Statistic" order="7" weight="0.2443281" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Statistic" order="8" visible="true" weight="0.73029774" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.32098764" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="11" weight="0.32888147" />
-      <window_info anchor="bottom" id="TypeScript" order="12" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32888147" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.24941361" />
+      <window_info id="Favorites" order="2" sideWeight="0.50139123" side_tool="true" weight="0.1625709" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="TypeScript" order="8" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/App.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/MapContainer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29532">
+          <caret line="1284" lean-forward="true" selection-start-line="1284" selection-end-line="1284" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#2607#2640#0" />
+            <element signature="e#2671#4068#0" />
+            <element signature="e#4097#5779#0" />
+            <element signature="e#8460#8468#0" />
+            <element signature="e#8505#8588#0" />
+            <element signature="e#8617#8706#0" />
+            <element signature="e#8731#8836#0" />
+            <element signature="e#8878#8991#0" />
+            <element signature="e#9017#9082#0" />
+            <element signature="e#9109#9175#0" />
+            <element signature="n#!!block;n#historyDraw#0;n#MapContainer#0" />
+            <element signature="e#50832#50970#0" />
+            <element signature="e#51053#51129#0" />
+            <element signature="e#51175#51293#0" />
+            <element signature="e#51337#51523#0" />
+            <element signature="e#51554#51628#0" />
+            <element signature="e#51653#51771#0" />
+            <element signature="e#51796#51958#0" />
+            <element signature="e#52191#52203#0" />
+            <element signature="n#!!block;n#componentDidMount#0;n#MapContainer#0" />
+            <element signature="n#!!block;n#componentWillUpdate#0;n#MapContainer#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/POIHeatMap.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4071">
+          <caret line="177" column="34" selection-start-line="177" selection-start-column="34" selection-end-line="177" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+            <element signature="n#!!block;n#componentWillMount#0;n#POIHeatMap#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/MapContainer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="29164">
+          <caret line="1290" column="61" selection-start-line="1290" selection-start-column="61" selection-end-line="1290" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#2607#2640#0" />
+            <element signature="e#2671#4068#0" />
+            <element signature="e#4097#5779#0" />
+            <element signature="e#8460#8468#0" />
+            <element signature="e#8505#8588#0" />
+            <element signature="e#8617#8706#0" />
+            <element signature="e#8731#8836#0" />
+            <element signature="e#8878#8991#0" />
+            <element signature="e#9017#9082#0" />
+            <element signature="e#9109#9175#0" />
+            <element signature="n#!!block;n#historyDraw#0;n#MapContainer#0" />
+            <element signature="e#50832#50970#0" />
+            <element signature="e#51053#51129#0" />
+            <element signature="e#51175#51293#0" />
+            <element signature="e#51337#51523#0" />
+            <element signature="e#51554#51628#0" />
+            <element signature="e#51653#51771#0" />
+            <element signature="e#51796#51958#0" />
+            <element signature="e#52191#52203#0" />
+            <element signature="n#!!block;n#componentDidMount#0;n#MapContainer#0" />
+            <element signature="n#!!block;n#componentWillUpdate#0;n#MapContainer#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/HeatMapTimePicker.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="13" column="35" selection-start-line="13" selection-start-column="35" selection-end-line="13" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-time-picker/dist/entry.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/POIChooseDialog.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="23" column="9" selection-start-line="23" selection-start-column="9" selection-end-line="23" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/TrafficFlowHeatMap.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/constants/constant.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1449">
@@ -431,13 +641,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/component/deprecate/WorldMap - 複製.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-684">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="266">
@@ -484,9 +687,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1125">
           <caret line="104" selection-start-line="104" selection-end-line="104" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -557,8 +757,8 @@
     <entry file="file://Z:/4tDrive/dataProcess/HangZhouPOI/HangZhouPOI_new/index.html" />
     <entry file="file://$PROJECT_DIR$/src/component/POIHeatMap.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="83" selection-start-line="83" selection-end-line="83" />
+        <state relative-caret-position="682">
+          <caret line="226" column="27" selection-start-line="226" selection-start-column="27" selection-end-line="226" selection-end-column="27" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
             <element signature="n#!!block;n#componentWillMount#0;n#POIHeatMap#0" />
@@ -568,55 +768,94 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/component/DetailView.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
-          <caret line="163" column="34" selection-start-line="163" selection-start-column="34" selection-end-line="163" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/component/WorldMap.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="15" column="6" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/component/TrafficFlowHeatMap.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/component/MultiLineChart.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
-          <caret line="176" column="70" selection-start-line="176" selection-start-column="70" selection-end-line="176" selection-end-column="70" />
+        <state relative-caret-position="483">
+          <caret line="21" column="4" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/component/POIChooseDialog.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
+        <state relative-caret-position="1671">
           <caret line="135" column="15" selection-start-line="135" selection-start-column="15" selection-end-line="135" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/VoronoiFn.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/MultiLineChart.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1280">
+          <caret line="159" column="8" selection-start-line="159" selection-start-column="8" selection-end-line="159" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/DetailView.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/deprecate/WorldMap - 複製.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="466" selection-start-line="466" selection-end-line="466" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="n#!!block;n#componentDidMount#0;n#WorldMap#0" />
+            <element signature="n#!!block;n#insideRec#0;n#WorldMap#0" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/component/MapContainer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="1298" column="39" selection-start-line="1298" selection-start-column="39" selection-end-line="1298" selection-end-column="39" />
+        <state relative-caret-position="230">
+          <caret line="1040" column="4" lean-forward="true" selection-start-line="1040" selection-start-column="4" selection-end-line="1040" selection-end-column="4" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#2607#2640#0" />
+            <element signature="e#2671#4068#0" />
+            <element signature="e#4097#5779#0" />
+            <element signature="e#8460#8468#0" />
+            <element signature="e#8505#8588#0" />
+            <element signature="e#8617#8706#0" />
+            <element signature="e#8731#8836#0" />
+            <element signature="e#8878#8991#0" />
+            <element signature="e#9017#9082#0" />
+            <element signature="e#9109#9175#0" />
             <element signature="n#!!block;n#historyDraw#0;n#MapContainer#0" />
-            <element signature="n#!!block;n#drawGrid#0;n#MapContainer#0" />
+            <element signature="e#50832#50970#0" />
+            <element signature="e#51053#51129#0" />
+            <element signature="e#51175#51293#0" />
+            <element signature="e#51337#51523#0" />
+            <element signature="e#51554#51628#0" />
+            <element signature="e#51653#51771#0" />
+            <element signature="e#51796#51958#0" />
+            <element signature="e#52191#52203#0" />
             <element signature="n#!!block;n#componentDidMount#0;n#MapContainer#0" />
             <element signature="n#!!block;n#componentWillUpdate#0;n#MapContainer#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/component/WorldMap.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="414" column="8" selection-start-line="414" selection-start-column="8" selection-end-line="414" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#254#299#0" expanded="true" />
+            <element signature="e#1296#1578#0" />
+            <element signature="e#1635#1692#0" />
+            <element signature="e#1773#1944#0" />
+            <element signature="e#1970#14869#0" />
+            <element signature="e#2709#14861#0" />
+            <element signature="e#14957#16811#0" />
+            <element signature="e#16844#17275#0" />
+            <element signature="e#17307#17420#0" />
+            <element signature="e#17446#17835#0" />
           </folding>
         </state>
       </provider>

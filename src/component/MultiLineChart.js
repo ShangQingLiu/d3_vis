@@ -170,7 +170,7 @@ class MultiLineChart extends Component {
         let height = 200;
         let width = 500;
         let margin = ({top: 20, right: 20, bottom: 20, left: 55});
-        console.log("selectGroups",global.selectGroups);
+        // console.log("selectGroups",global.selectGroups);
         let recs = Object.values(global.selectGroups._layers);
 
         let p2 = recs[Object.keys(global.selectGroups._layers).length-1]._latlngs[0][1];

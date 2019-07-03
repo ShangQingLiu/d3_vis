@@ -15,7 +15,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 
 class WorldMap extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.map = React.createRef()
         this.state = {
             showCheckDetailView: false,
@@ -27,9 +27,6 @@ class WorldMap extends Component {
     }
 
     componentDidMount() {
-
-
-
         this.cleanLayerPoint();
         global.map = L.map('map', {zoomControl: false, attributeControl: false}).setView([30.27, 120.2], 11);
         global.selectGroups = new L.layerGroup();
@@ -42,10 +39,13 @@ class WorldMap extends Component {
             }
         );
         this.drawGrid(global.map);
-
     }
 
-
+    componentWillUpdate(nextProps) {
+        if (nextProps.recBound2WorldMapVoronoiFn !== this.props.recBound2WorldMapVoronoiFn) {
+            this.voronoiFn(nextProps.recBound2WorldMapVoronoiFn);
+        }
+    }
 
     cleanLayerPoint=()=>{
         let params={
@@ -283,7 +283,7 @@ class WorldMap extends Component {
 
             }
         });
-    }
+    };
     describeArc = (lng, lat, innerRadius, outerRadius, startAngle, endAngle, value) => {
         let innerTest = 0.0017884;
         let outerTest = 0.00400;
@@ -335,7 +335,7 @@ class WorldMap extends Component {
         d = d.concat(outA);
         d.push(inA[inA.length - 1]);
         return d;
-    }
+    };
     checkGetDetailView = (e) => {
         let wideStep = ( global.right-global.left)/global.blockCount_col
         let heightStep = ( global.top-global.bottom)/global.blockCount_row
@@ -369,6 +369,53 @@ class WorldMap extends Component {
             global.detailView = [];
         });
     };
+    voronoiFn = (recBound2WorldMapVoronoiFn) =>{
+       console.log(recBound2WorldMapVoronoiFn);
+       //accurate divide tool funciton
+        function accDiv(arg1,arg2) {
+            let t1=0,t2=0,r1,r2;
+            try{t1=arg1.toString().split(".")[1].length}catch(e){}
+            try{t2=arg2.toString().split(".")[1].length}catch(e){}
+                r1=Math.Number(arg1.toString().replace(".",""));
+                r2=Math.Number(arg2.toString().replace(".",""));
+                return (r1/r2)*Math.pow(10,t2-t1);
+        };
+       //random 200 points inside of the boundary
+        //boundry
+        //lt--------->rt
+        //|          |
+        //lb<---------rb
+        let lb = {
+            x:recBound2WorldMapVoronoiFn[0].lng,
+            y:recBound2WorldMapVoronoiFn[1].lat
+        };
+        let xRange = recBound2WorldMapVoronoiFn[1].lng - recBound2WorldMapVoronoiFn[0].lng;
+        let yRange = recBound2WorldMapVoronoiFn[0].lat - recBound2WorldMapVoronoiFn[1].lat;
+        // let xStep = accDiv ((recBound2WorldMapVoronoiFn[1].lng - recBound2WorldMapVoronoiFn[0].lng),200)
+        // let yStep = accDiv ((recBound2WorldMapVoronoiFn[0].lat - recBound2WorldMapVoronoiFn[1].lat),200)
+        let resultRandomPoints = [];
+        // not effieciency enough
+        // for (i=0;i<40000;i++){
+        //     let currentResult = {};
+        //     currentResult.x = currenLb.x + xStep*Math.random();
+        //     currentResult.y = currenLb.y + yStep*Math.random();
+        //     resultRandomPoints.push(currentResult);
+        //     //update currentLb
+        //     currenLb.x = currenLb.x + xStep%200
+        // }
+        for (let i=0;i<200;i++){
+           let currentResult = [];
+            currentResult.push(lb.x + Math.random()*xRange);
+            currentResult.push(lb.y + Math.random()*yRange);
+            resultRandomPoints.push(currentResult);
+        }
+        console.log(resultRandomPoints);
+       /////////////////////////////////////////////////////////
+       //get voronoi result from this 200 points
+       //  voronoi = d3.voronoi().extent()
+
+    }
+    ;
 
     render() {
         return (

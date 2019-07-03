@@ -190,8 +190,8 @@ class DetailView extends Component {
 
     componentWillUpdate(nextProps) {
         if (nextProps.recBound !== this.props.recBound) {
-            let p1 = nextProps.recBound[0]
-            let p2 = nextProps.recBound[1]
+            let p1 = nextProps.recBound[0];
+            let p2 = nextProps.recBound[1];
             let arr = p1.lat.toString() + ',' + p1.lng.toString()
                 + ',' + p2.lat.toString() + ',' + p2.lng.toString();
             let params = {
@@ -215,10 +215,7 @@ class DetailView extends Component {
                 this.draw(fakeColorIndex[global.fakeIndex], asterData1, asterData2, poidata);
                 global.fakeIndex++;
                 //POIData
-
-
                 // draw=(centerColorIndex,arcData1,arcData2,POIData)=>{
-
             })
 
         }
