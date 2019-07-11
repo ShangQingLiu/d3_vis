@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cb5c83e7-d6f1-489d-b05e-c659efb9f354" name="Default" comment="kkkkkkkkkkkkkkkkkk">
+      <change beforePath="$PROJECT_DIR$/.idea/jsLinters/eslint.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLinters/eslint.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/component/MapContainer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/MapContainer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/component/WorldMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/WorldMap.js" afterDir="false" />
     </list>
@@ -23,12 +26,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/component/MapContainer.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="460">
-              <caret line="1311" column="38" selection-start-line="1311" selection-start-column="38" selection-end-line="1311" selection-end-column="38" />
+            <state relative-caret-position="2133">
+              <caret line="102" column="23" selection-start-line="102" selection-start-column="23" selection-end-line="102" selection-end-column="23" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
                 <element signature="n#!!block;n#historyDraw#0;n#MapContainer#0" />
-                <element signature="e#52285#52297#0" />
                 <element signature="n#!!block;n#componentDidMount#0;n#MapContainer#0" />
                 <element signature="n#!!block;n#componentWillUpdate#0;n#MapContainer#0" />
               </folding>
@@ -36,11 +38,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/component/WorldMap.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="805">
-              <caret line="441" column="28" selection-start-line="441" selection-start-column="28" selection-end-line="441" selection-end-column="28" />
+            <state relative-caret-position="753">
+              <caret line="534" column="12" selection-start-line="534" selection-start-column="12" selection-end-line="534" selection-end-column="12" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
                 <element signature="e#254#299#0" expanded="true" />
@@ -50,19 +52,37 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/component/DetailView.js">
+        <entry file="file://$PROJECT_DIR$/node_modules/leaflet/src/geo/crs/CRS.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
+            <state relative-caret-position="27">
+              <caret line="26" column="4" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/d3-selection/src/selection/data.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="27">
               <caret line="18" selection-start-line="18" selection-end-line="18" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/component/DetailView.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="27">
+              <caret line="17" column="46" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/component/deprecate/WorldMap_react-leaflet.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="483">
-              <caret line="461" selection-start-line="461" selection-end-line="461" />
+            <state>
+              <caret line="39" column="14" selection-start-line="39" selection-start-column="14" selection-end-line="39" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -147,64 +167,28 @@
         <option value="$PROJECT_DIR$/src/component/DetailView.js" />
         <option value="$PROJECT_DIR$/src/component/VoronoiFn.js" />
         <option value="$PROJECT_DIR$/src/component/MultiLineChart.js" />
-        <option value="$PROJECT_DIR$/src/component/MapContainer.js" />
         <option value="$PROJECT_DIR$/src/component/deprecate/WorldMap_new_withoutReact leaflet.js" />
+        <option value="$PROJECT_DIR$/src/component/MapContainer.js" />
         <option value="$PROJECT_DIR$/src/component/WorldMap.js" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-12" />
-    <option name="y" value="18" />
-    <option name="width" value="1942" />
-    <option name="height" value="1072" />
+    <option name="x" value="1912" />
+    <option name="y" value="-859" />
+    <option name="width" value="1096" />
+    <option name="height" value="1906" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="Scope" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="d3_vis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="d3_vis" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="d3_vis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="d3_vis" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="d3_vis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="d3_vis" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="component" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="d3_vis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="d3_vis" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="component" type="462c0819:PsiDirectoryNode" />
-              <item name="deprecate" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="d3_vis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="d3_vis" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="constants" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value=":w&#9;null&#9;null" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/node_modules/eslint" />
@@ -215,13 +199,14 @@
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.prettier" value="project" />
     <property name="node.js.path.for.package.standard" value="project" />
-    <property name="node.js.selected.package.eslint" value="D:\d3_vis\node_modules\eslint" />
+    <property name="node.js.selected.package.eslint" value="$PROJECT_DIR$/node_modules/eslint" />
     <property name="node.js.selected.package.prettier" value="" />
-    <property name="node.js.selected.package.standard" value="D:\d3_vis\node_modules\eslint" />
+    <property name="node.js.selected.package.standard" value="D:/d3_vis/node_modules/eslint" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -361,12 +346,14 @@
       <workItem from="1559631300865" duration="1689000" />
       <workItem from="1561347450068" duration="9061000" />
       <workItem from="1561612324131" duration="11267000" />
-      <workItem from="1562172469718" duration="3936000" />
+      <workItem from="1562172469718" duration="44364000" />
+      <workItem from="1562849922788" duration="2457000" />
+      <workItem from="1562855187764" duration="5068000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="724417000" />
+    <option name="totallyTimeSpent" value="772370000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -378,10 +365,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="1912" y="-859" width="1096" height="1906" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4986088" visible="true" weight="0.33034775" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4986088" weight="0.33034775" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24941361" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" sideWeight="0.50139123" side_tool="true" weight="0.1625709" />
@@ -394,7 +381,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32328483" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Statistic" order="8" weight="0.2443281" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.22869022" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.2285553" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="11" weight="0.32888147" />
       <window_info anchor="bottom" id="TypeScript" order="12" />
@@ -622,40 +609,53 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/component/MapContainer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="1311" column="38" selection-start-line="1311" selection-start-column="38" selection-end-line="1311" selection-end-column="38" />
+        <state relative-caret-position="2133">
+          <caret line="102" column="23" selection-start-line="102" selection-start-column="23" selection-end-line="102" selection-end-column="23" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
             <element signature="n#!!block;n#historyDraw#0;n#MapContainer#0" />
-            <element signature="e#52285#52297#0" />
             <element signature="n#!!block;n#componentDidMount#0;n#MapContainer#0" />
             <element signature="n#!!block;n#componentWillUpdate#0;n#MapContainer#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/component/deprecate/WorldMap_react-leaflet.js">
+    <entry file="file://$PROJECT_DIR$/src/component/WorldMap.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="461" selection-start-line="461" selection-end-line="461" />
+        <state relative-caret-position="753">
+          <caret line="534" column="12" selection-start-line="534" selection-start-column="12" selection-end-line="534" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#254#299#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/leaflet/src/geo/crs/CRS.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
+          <caret line="26" column="4" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/d3-selection/src/selection/data.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/component/DetailView.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
+        <state relative-caret-position="27">
+          <caret line="17" column="46" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/component/WorldMap.js">
+    <entry file="file://$PROJECT_DIR$/src/component/deprecate/WorldMap_react-leaflet.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="805">
-          <caret line="441" column="28" selection-start-line="441" selection-start-column="28" selection-end-line="441" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-            <element signature="e#254#299#0" expanded="true" />
-          </folding>
+        <state>
+          <caret line="39" column="14" selection-start-line="39" selection-start-column="14" selection-end-line="39" selection-end-column="14" />
         </state>
       </provider>
     </entry>

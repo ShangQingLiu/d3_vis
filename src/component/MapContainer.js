@@ -141,7 +141,7 @@ class MapContainer extends Component {
             let tempLines = new L.polyline([], {dashArray: 5});
             global.map.on('click', onClick);    //点击地图
             global.map.on('dblclick', onDoubleClick);
-            global.map.on('mousemove', onMove)//双击地图
+            global.map.on('mousemove', onMove);//双击地图
 
 
             function onClick(e) {
@@ -196,10 +196,11 @@ class MapContainer extends Component {
                 if (typeof tmprect != 'undefined') {
                     tmprect.remove()
                 }
+                console.log("e",e);
                 //左上角坐标
                 latlngs[0] = [e.latlng.lat, e.latlng.lng];
-                //屬標座標存取
-                mouseLatLng[0] = [e.originalEvent.pageX,e.originalEvent.pageY];
+                //鼠標座標存取
+                mouseLatLng[0] = [e.containerPoint.x,e.containerPoint.y];
                 //开始绘制，监听鼠标移动事件
                 global.map.on('mousemove', onMove)
             }
@@ -222,7 +223,7 @@ class MapContainer extends Component {
                 //右下角坐标
                 latlngs[1] = [e.latlng.lat, e.latlng.lng];
                 //屬標座標存取
-                mouseLatLng[1] = [e.originalEvent.pageX,e.originalEvent.pageY];
+                mouseLatLng[1] = [e.containerPoint.x,e.containerPoint.y];
                 // var bounds = L.bounds(latlngs[0],latlngs[1]);
                 rectangle = L.rectangle(latlngs, {
                     color: '#3300ff',
@@ -985,6 +986,7 @@ class MapContainer extends Component {
                             if (Object.keys(POIGroups).length !== 0) {
                                 POIGroups.clearLayers();
                                 POIGroup = [];
+                                // recBoundMouse2WorldMapVoronoiFn
                             }
                         }
                     }

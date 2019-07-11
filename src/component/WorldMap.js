@@ -12,6 +12,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import * as qs from 'qs'
 
 class WorldMap extends Component {
     constructor(props) {
@@ -43,7 +44,7 @@ class WorldMap extends Component {
 
     componentWillUpdate(nextProps) {
         if (nextProps.recBound2WorldMapVoronoiFn !== this.props.recBound2WorldMapVoronoiFn) {
-            this.voronoiFn(nextProps.recBound2WorldMapVoronoiFn);
+            this.voronoiFn(nextProps.recBound2WorldMapVoronoiFn,nextProps.recBoundMouse2WorldMapVoronoiFn);
         }
     }
 
@@ -369,8 +370,8 @@ class WorldMap extends Component {
             global.detailView = [];
         });
     };
-    voronoiFn = (recBound2WorldMapVoronoiFn) =>{
-       console.log(recBound2WorldMapVoronoiFn);
+    voronoiFn = (recBound2WorldMapVoronoiFn,recBoundMouse2WorldMapVoronoiFn) =>{
+       console.log("recBound2WorldMapVoronoiFn",recBound2WorldMapVoronoiFn);
        //accurate divide tool funciton
         function accDiv(arg1,arg2) {
             let t1=0,t2=0,r1,r2;
@@ -389,63 +390,154 @@ class WorldMap extends Component {
             x:recBound2WorldMapVoronoiFn[0].lng,
             y:recBound2WorldMapVoronoiFn[1].lat
         };
-        let xRange = recBound2WorldMapVoronoiFn[1].lng - recBound2WorldMapVoronoiFn[0].lng;
-        let yRange = recBound2WorldMapVoronoiFn[0].lat - recBound2WorldMapVoronoiFn[1].lat;
+        let xRange = Math.abs(recBound2WorldMapVoronoiFn[1].lng - recBound2WorldMapVoronoiFn[0].lng);
+        let yRange = Math.abs(recBound2WorldMapVoronoiFn[0].lat - recBound2WorldMapVoronoiFn[1].lat);
         // let xStep = accDiv ((recBound2WorldMapVoronoiFn[1].lng - recBound2WorldMapVoronoiFn[0].lng),200)
         // let yStep = accDiv ((recBound2WorldMapVoronoiFn[0].lat - recBound2WorldMapVoronoiFn[1].lat),200)
-        let resultRandomPoints = [];
+        let resultRandomPoint = [];
         // not effieciency enough
         // for (i=0;i<40000;i++){
         //     let currentResult = {};
         //     currentResult.x = currenLb.x + xStep*Math.random();
         //     currentResult.y = currenLb.y + yStep*Math.random();
-        //     resultRandomPoints.push(currentResult);
+        //     resultRandomPoint.push(currentResult);
         //     //update currentLb
         //     currenLb.x = currenLb.x + xStep%200
         // }
-        for (let i=0;i<200;i++){
-           let currentResult = [];
-            currentResult.push(lb.x + Math.random()*xRange);
-            currentResult.push(lb.y + Math.random()*yRange);
-            resultRandomPoints.push(currentResult);
-        }
-        // console.log(resultRandomPoints);
+        // console.log(resultRandomPoint);
        /////////////////////////////////////////////////////////
        //get voronoi result from this 200 points
-        //TODO:fix null of recBoundMouse2WorldMapVoronoiFn
-        console.log(this.props.recBoundMouse2WorldMapVoronoiFn);
+        console.log("recBoundMouse2WorldMapVoronoiFn",recBoundMouse2WorldMapVoronoiFn);
         let xLength = Math.abs(
-            this.props.recBoundMouse2WorldMapVoronoiFn[0][0]-this.props.recBoundMouse2WorldMapVoronoiFn[1][0]
+            recBoundMouse2WorldMapVoronoiFn[0][0]-recBoundMouse2WorldMapVoronoiFn[1][0]
             );
         let yLength = Math.abs(
-            this.props.recBoundMouse2WorldMapVoronoiFn[0][1]-this.props.recBoundMouse2WorldMapVoronoiFn[1][1],
+            recBoundMouse2WorldMapVoronoiFn[0][1]-recBoundMouse2WorldMapVoronoiFn[1][1],
         );
+        console.log("xLength",xLength);
+        console.log("yLength",yLength);
+        //left bottom corner
+        //take small lng
+        let leftLng =  recBoundMouse2WorldMapVoronoiFn[1][0] >recBoundMouse2WorldMapVoronoiFn[0][0]?recBoundMouse2WorldMapVoronoiFn[0][0]:recBoundMouse2WorldMapVoronoiFn[1][0];
+        //take big lng
+        let rightLng =  recBoundMouse2WorldMapVoronoiFn[1][0] >recBoundMouse2WorldMapVoronoiFn[0][0]?recBoundMouse2WorldMapVoronoiFn[1][0]:recBoundMouse2WorldMapVoronoiFn[0][0];
+        //take small lat
+        let topLat =  recBoundMouse2WorldMapVoronoiFn[0][1]>recBoundMouse2WorldMapVoronoiFn[1][1]?recBoundMouse2WorldMapVoronoiFn[1][1]:recBoundMouse2WorldMapVoronoiFn[0][1];
+        //take big lat
+        let bottomLat =  recBoundMouse2WorldMapVoronoiFn[0][1]>recBoundMouse2WorldMapVoronoiFn[1][1]?recBoundMouse2WorldMapVoronoiFn[0][1]:recBoundMouse2WorldMapVoronoiFn[1][1];
+
+        for (let i=0;i<5;i++){
+            // let newX = lb.x + Math.random()*xRange;
+            // let newY = lb.y + Math.random()*yRange;
+            let newX =leftLng+ Math.random()*xLength;
+            let newY =topLat+ Math.random()*yLength;
+            // let mapX = global.map.latLngToLayerPoint(L.latLng(newY,newX)).x;
+            // let mapY = global.map.latLngToLayerPoint(L.latLng(newY,newX)).y;
+            resultRandomPoint.push({x:newX, y:newY});
+        }
+
+        // let mapLayer = {
+        //     onAdd:function (map) {
+        //         map.on('viewreset moveend',drawLayer);
+        //         drawLayer();
+        //     }
+        // };
+        //
+        // global.map.addLayer(mapLayer);
 
         d3.select(global.map.getPanes().overlayPane).select('svg').remove();
-        let svg = d3.select(global.map.getPanes().overlayPane).append('svg'),
-            g = svg.append('g').attr('class', 'leaflet-zoom-hide');
-        svg.attr("width", 1104)
-            .attr("height", 350);
-        let path = svg.append("g")
-            .selectAll("path");
-        let voronoi = d3.voronoi().extent([[0, 0], [xLength, yLength]])
+        let svg = d3.select(global.map.getPanes().overlayPane).append('svg')
+            .attr('class', 'leaflet-zoom-hide')
+            .attr("width", 1088)
+            .attr("height", 640);
+        console.log("resultRandomPoint",resultRandomPoint);
+        //filter Data
+        let bounds = global.map .getBounds();
+        let drawLimit = bounds.pad(0.4);
+        let filterPoints = resultRandomPoint;
+            // .filter(function (p) {
+            // let latlng = new L.latLng(p.y,p.x);
+            // return drawLimit.contains(latlng);
+        // });
+        console.log("filterPoints",filterPoints);
+        let svgPoints = svg.selectAll("g")
+            .data(filterPoints)
+            .enter()
+            .append("g");
+        let path = svgPoints.attr("class","voronoiPath");
+        path.append("circle")
+            .attr("transform",function (d) {
+                // let latlng = new L.latLng(d.y,d.x);
+                // let point =  global.map.latLngToLayerPoint(latlng);
+                // console.log("tmpPoint",point);
+                // return "translate("+point.x+","+point.y+")";
+                return "translate("+d.x+","+d.y+")";
+            })
+            .attr("class","circle") .attr("r",2);
+        console.log([[leftLng ,topLat], [rightLng, bottomLat]]);
+        let voronoi = d3.voronoi()
+             .extent([[leftLng ,topLat], [rightLng, bottomLat]])
             .x(function (p) {
-                return p[0]
+                return p.x
             })
             .y(function (p) {
-                return p[1]
+                return p.y
             });
-        let voronoiP = path.data(voronoi.polygons(resultRandomPoints)).enter().append("path");
+        console.log("resultRandomPoint",resultRandomPoint);
+        let randomPoint = [];
+        for(let i = 0; i<resultRandomPoint.length;i++){
+            // let tmpLatLng = new L.latLng(resultRandomPoint[i].y,resultRandomPoint[i].x);
+            // let tmpPoint =  global.map.latLngToLayerPoint(tmpLatLng);
+            // randomPoint.push(tmpPoint)
+            randomPoint.push(resultRandomPoint[i])
+        }
+        console.log("randomPoint",randomPoint);
+
+        //
+        console.log("voronoi random point",voronoi.polygons(randomPoint));
+        this.getPOIInVoronoi(voronoi.polygons(randomPoint));
+
+        let voronoiP = path.selectAll("path").data(voronoi.polygons(randomPoint)).enter().append("path");
         voronoiP.attr("stroke", "black")
+            .attr("class","point-cell")
             .attr("fill", "none")
-            // .attr("d", function(d) { return "M" + d.join("L") + "Z" } );
             .attr("d", polygon);
 
         function polygon(d) {
-            return "M" + d.join("L") + "Z";
+            if(d){
+                return "M" + d.join("L") + "Z";
+            }
+            else{
+                return;
+            }
         }
-    }
-    ;
+
+    };
+
+    getPOIInVoronoi=(voronoiArray)=>{
+        for(let i = 0;i<1;i++){
+            //1. contruct the point
+            //2. put point into the latlngArray
+            let latLngArray = [];
+            for(let j=0;j<voronoiArray[i].length;j++){
+                let tmpPoint = L.point(voronoiArray[i][j][0],voronoiArray[i][j][1]);
+                latLngArray.push(global.map.layerPointToLatLng(tmpPoint));
+            }
+            //send the latlngArray to the server to proccess POI inside of voronoi
+            let sendLatLngArray = [];
+            for(let k=0;k<latLngArray.length;k++){
+              sendLatLngArray.push([latLngArray[k].lat,latLngArray[k].lng]);
+            }
+            let params={
+                latLngArray:sendLatLngArray.toString()
+            };
+            Promise.all([
+                axios.get(global.server + '/vis1/getPOIInVoronoi',{params})
+            ]).then(([data]) => {
+               console.log(data)
+            });
+        }
+    };
 
     render() {
         return (
