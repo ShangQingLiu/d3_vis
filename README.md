@@ -1,3 +1,15 @@
+# 使用说明
+
+前端
+首先到d3_vis 的根目录下 git pull 更新project 若是没有d3_vis 可以直接 git clone https://github.com/ShangQingLiu/d3_vis.git
+然后就可以在根目录 npm start 开启前端
+
+后端
+django 框架 到 10.76.2.30 下面的 ~/HardDrive/JiaxinLiu/4tDrive/sqlProcess/flowVis 下面 使用命令 
+ sudo ~/.conda/envs/sqlprocess/bin/python manage.py runserver 0:80
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
